@@ -12,12 +12,11 @@ with source as (
         campaign_name AS campaign,
         'claro' AS brand,
         'google' AS source,
-        SUM(CAST(metrics_cost_micros AS DOUBLE) / 1000000) AS cost, 
-        SUM(CAST(metrics_impressions AS INT)) AS impressions,
-        SUM(CAST(metrics_clicks AS INT)) AS clicks
+        CAST(metrics_cost_micros AS DOUBLE) / 1000000 AS cost, 
+        CAST(metrics_impressions AS INT) AS impressions,
+        CAST(metrics_clicks AS INT) AS clicks
     FROM trusted_homeservices_claro.google_ads_ad_group
-    GROUP BY all
 )
 select
     *
-from source
+from build_source
