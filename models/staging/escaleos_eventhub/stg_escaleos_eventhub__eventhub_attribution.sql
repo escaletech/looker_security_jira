@@ -1,7 +1,7 @@
 with source as (
     select
         *
-    from {{ source('escaleos_eventhub', 'eventhub_attribution') }}
+    from {{ source('trusted_escaleos_eventhub', 'eventhub_attribution') }} 
 )
 , build_source as (
     SELECT

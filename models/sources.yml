@@ -2,8 +2,8 @@ version: 2
 
 sources:
   - name: escaleos_eventhub 
-    catalog: hive_metastore
     schema: trusted_escaleos_eventhub
+    database: hive_metastore
     tables:
       - name: eventhub_attribution
 
