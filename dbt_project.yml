@@ -42,14 +42,14 @@ models:
     dw:
       +materialized: table
       catalog: hive_metastore
-      schema: dbt_test
+      schema: dbt_production
     
     intermediate:
       +materialized: ephemeral
       catalog: hive_metastore
-      schema: dbt_test
+      schema: dbt_production
     
     staging:
       +materialized: view
       catalog: hive_metastore
-      schema: dbt_test
+      schema: dbt_production
