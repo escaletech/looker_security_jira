@@ -1,12 +1,11 @@
 version: 2
 
 sources:
-  - name: escaleos_eventhub 
+  - name: escaleos_eventhub
     schema: trusted_escaleos_eventhub
-    database: hive_metastore
     tables:
       - name: eventhub_attribution
-
+  
   - name: homeservices_claro
     catalog: hive_metastore
     schema: trusted_homeservices_claro

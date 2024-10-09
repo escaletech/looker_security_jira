@@ -1,7 +1,7 @@
 with source as (
     select
         *
-    from {{ source('source_name', 'object_name') }}
+    from {{ source('homeservices_pdp', 'google_ads_ad_group') }}
 )
 , build_source as (
     SELECT

@@ -1,7 +1,7 @@
 with source as (
     select
         *
-    from {{ source('source_name', 'object_name') }}
+    from {{ source('homeservices_claro', 'bing_ads_insights') }}
 )
 , build_source as (
     SELECT 
