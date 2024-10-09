@@ -12,12 +12,12 @@ with source as (
         campaign_name AS campaign,
         'claro' as brand,
         'bing' as source,
-        SUM(CAST(spend AS DOUBLE)) AS cost, 
-        SUM(CAST(impressions AS INT)) AS impressions,
-        SUM(CAST(clicks AS INT)) AS clicks
+        CAST(spend AS DOUBLE) AS cost, 
+        CAST(impressions AS INT) AS impressions,
+        CAST(clicks AS INT) AS clicks
     FROM hive_metastore.trusted_homeservices_claro.bing_ads_insights
     WHERE LOWER(campaign_name) NOT LIKE '%oi%'
 )
 select
     *
-from source
+from build_source

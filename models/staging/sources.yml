@@ -2,10 +2,11 @@ version: 2
 
 sources:
   - name: escaleos_eventhub
+    catalog: hive_metastore
     schema: trusted_escaleos_eventhub
     tables:
       - name: eventhub_attribution
-  
+
   - name: homeservices_claro
     catalog: hive_metastore
     schema: trusted_homeservices_claro
@@ -13,7 +14,7 @@ sources:
       - name: bing_ads_insights
       - name: facebook_ads_insights
       - name: google_ads_ad_group
-  
+
   - name: homeservices_pdp
     catalog: hive_metastore
     schema: trusted_homeservices_pdp

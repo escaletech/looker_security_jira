@@ -1,7 +1,7 @@
 with source as (
-    select
-        *
-    from {{ source('trusted_escaleos_eventhub', 'eventhub_attribution') }} 
+    select 
+        * 
+    from {{ source('escaleos_eventhub', 'eventhub_attribution') }}
 )
 , build_source as (
     SELECT
@@ -22,7 +22,6 @@ with source as (
         ,LOWER(vertical) AS vertical
     FROM source
     WHERE event_type IN ('click', 'pageview', 'form_submit')
-    GROUP BY all
 )
 select
     *
