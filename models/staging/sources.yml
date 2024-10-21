@@ -14,6 +14,7 @@ sources:
       - name: bing_ads_insights
       - name: facebook_ads_insights
       - name: google_ads_ad_group
+      - name: google_ads_geographic_view
 
   - name: homeservices_pdp
     catalog: hive_metastore
@@ -22,3 +23,11 @@ sources:
       - name: bing_ads_insights
       - name: facebook_ads_insights
       - name: google_ads_ad_group
+      - name: google_ads_geographic_view
+      - name: google_ads_geo_target_constant
+
+  - name: sandbox
+    catalog: hive_metastore
+    schema: _sandbox
+    tables:
+      - name: hubchat_itau
