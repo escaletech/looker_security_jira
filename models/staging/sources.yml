@@ -31,3 +31,229 @@ sources:
     schema: _sandbox
     tables:
       - name: hubchat_itau
+
+  - name: raw
+    catalog: hive_metastore
+    schema: raw
+    tables: 
+    - name: raw_finance_bv_google_ads__ad_group_ad
+    - name: raw_finance_bv_google_ads__ad_group
+    - name: raw_finance_bv_google_ads__campaign
+    - name: raw_finance_bv_google_ads__search_term_view
+    - name: raw_finance_bv_google_spreadsheet__egv_bp_crm
+    - name: raw_finance_bv_google_spreadsheet__egv_ops_production_goals
+    - name: raw_finance_bv_google_spreadsheet__fgts_ops_production_goals
+    - name: raw_finance_bv_google_spreadsheet__finan_bp_crm
+    - name: raw_finance_bv_google_spreadsheet__finan_cs_vendas
+    - name: raw_finance_bv_google_spreadsheet__finan_ops_production_goals
+    - name: raw_finance_bv_google_spreadsheet__finan_cs
+    - name: raw_finance_bv_google_spreadsheet__tabulacao_motivos_bv
+    - name: raw_finance_bv_hubspot__archived_contacts
+    - name: raw_finance_bv_hubspot__archived_deals
+    - name: raw_finance_bv_hubspot__associations
+    - name: raw_finance_bv_hubspot__contacts
+    - name: raw_finance_bv_hubspot__deals_pipelines
+    - name: raw_finance_bv_hubspot__deals
+    - name: raw_finance_bv_hubspot__owners
+    - name: raw_finance_bv_hubspot__property_values
+    - name: raw_finance_bv_lead_platform__crm_invalid_fields
+    - name: raw_finance_bv_lead_platform__events
+    - name: raw_finance_bv_lead_platform__leads
+    - name: raw_finance_bv_phonemanager__attendances_add
+    - name: raw_finance_bv_phonemanager__attendances_source
+    - name: raw_finance_bv_phonemanager__calls_history_queue
+    - name: raw_finance_bv_phonemanager__calls_history_register
+    - name: raw_finance_bv_phonemanager__lines
+    - name: raw_finance_bv_phonemanager__queue
+    - name: raw_finance_bv_phonemanager__teams_supervisors
+    - name: raw_finance_bv_phonemanager__teams
+    - name: raw_finance_bv_phonemanager__telephony_types
+    - name: raw_finance_bv_phonemanager__temp_callback
+    - name: raw_finance_bv_phonemanager__users_teams
+    - name: raw_finance_bv_phonemanager__users
+    - name: raw_finance_general_google_spreadsheet__cost_channel_partners
+    - name: raw_finance_general_google_spreadsheet__hubspot_teams
+    - name: raw_finance_general_hubchat_escale_finance__attendance
+    - name: raw_finance_general_hubchat_escale_finance__messages_context
+    - name: raw_finance_general_hubchat_escale_finance__messages_from
+    - name: raw_finance_general_hubchat_escale_finance__messages
+    - name: raw_finance_general_hubchat_escale_finance__workspace
+    - name: raw_finance_general_hubspot__archived_contacts
+    - name: raw_finance_general_hubspot__archived_deals
+    - name: raw_finance_general_hubspot__associations
+    - name: raw_finance_general_hubspot__contacts
+    - name: raw_finance_general_hubspot__deals_pipelines
+    - name: raw_finance_general_hubspot__deals
+    - name: raw_finance_general_hubspot__owners
+    - name: raw_finance_general_hubspot__property_values
+    - name: raw_finance_itau_google_spreadsheet__consignado_ops_production_goals
+    - name: raw_finance_itau_google_spreadsheet__consolidacao_itau_fgts
+    - name: raw_finance_itau_google_spreadsheet__consultants_teams_ops
+    - name: raw_finance_itau_google_spreadsheet__fgts_ops_costs
+    - name: raw_finance_itau_google_spreadsheet__fgts_ops_production_goals
+    - name: raw_finance_itau_google_spreadsheet__financiamento_ops_costs
+    - name: raw_finance_itau_google_spreadsheet__itau_bp_crm
+    - name: raw_finance_itau_google_spreadsheet__itau_cs_vendas
+    - name: raw_finance_itau_google_spreadsheet__itau_cs
+    - name: raw_finance_itau_google_spreadsheet__ops_production_goals
+    - name: raw_finance_itau_hubspot__archived_deals
+    - name: raw_finance_itau_hubspot__associations
+    - name: raw_finance_itau_hubspot__contacts
+    - name: raw_finance_itau_hubspot__deals_pipelines
+    - name: raw_finance_itau_hubspot__deals
+    - name: raw_finance_itau_hubspot__owners
+    - name: raw_finance_itau_hubspot__property_values
+    - name: raw_finance_itau_hubspot__tickets_pipelines
+    - name: raw_finance_itau_hubspot__tickets
+    - name: raw_finance_itau_lead_platform __crm_invalid_fields
+    - name: raw_finance_itau_lead_platform __events
+    - name: raw_finance_itau_lead_platform __leads
+    - name: raw_finance_itau_phonemanager __attendances_add
+    - name: raw_finance_itau_phonemanager __attendances_source
+    - name: raw_finance_itau_phonemanager __calls_history_queue
+    - name: raw_finance_itau_phonemanager __calls_history_register
+    - name: raw_finance_itau_phonemanager __growth_history
+    - name: raw_finance_itau_phonemanager __lines
+    - name: raw_finance_itau_phonemanager __queue
+    - name: raw_finance_itau_phonemanager __teams_supervisors
+    - name: raw_finance_itau_phonemanager __teams
+    - name: raw_finance_itau_phonemanager __telephony_types
+    - name: raw_finance_itau_phonemanager __temp_callback
+    - name: raw_finance_itau_phonemanager__users_teams
+    - name: raw_finance_itau_phonemanager__users
+    - name: raw_homeservices_claro_bing_ads__geolocation
+    - name: raw_homeservices_claro_bing_ads__insights
+    - name: raw_homeservices_claro_facebook_ads__geolocation
+    - name: raw_homeservices_claro_facebook_ads__insights
+    - name: raw_homeservices_claro_google_ads__ad_group
+    - name: raw_homeservices_claro_google_ads__campaign
+    - name: raw_homeservices_claro_google_ads__geo_target_constant
+    - name: raw_homeservices_claro_google_ads__geographic_view
+    - name: raw_homeservices_claro_google_search_console__only_pages
+    - name: raw_homeservices_claro_google_search_console__pages
+    - name: raw_homeservices_claro_google_search_console__queries
+    - name: raw_homeservices_claro_google_spreadsheet__auxiliary_intake
+    - name: raw_homeservices_claro_google_spreadsheet__base_cidades
+    - name: raw_homeservices_claro_google_spreadsheet__cabeamento
+    - name: raw_homeservices_claro_google_spreadsheet__campaign_whatsapp
+    - name: raw_homeservices_claro_google_spreadsheet__credito
+    - name: raw_homeservices_claro_google_spreadsheet__weight_days
+    - name: raw_homeservices_claro_lead_platform__crm_invalid_fields
+    - name: raw_homeservices_claro_lead_platform__events
+    - name: raw_homeservices_claro_lead_platform__leads
+    - name: raw_homeservices_claro_orderprocessing_nozhka 
+    - name: raw_homeservices_claro_phonemanager__action_type
+    - name: raw_homeservices_claro_phonemanager__agents_history
+    - name: raw_homeservices_claro_phonemanager__agents_pause_history
+    - name: raw_homeservices_claro_phonemanager__attendances_add
+    - name: raw_homeservices_claro_phonemanager__attendances_notes
+    - name: raw_homeservices_claro_phonemanager__attendances_products
+    - name: raw_homeservices_claro_phonemanager__attendances_source
+    - name: raw_homeservices_claro_phonemanager__attendances
+    - name: raw_homeservices_claro_phonemanager__attribute_options
+    - name: raw_homeservices_claro_phonemanager__attributes
+    - name: raw_homeservices_claro_phonemanager__calls_history_ivr
+    - name: raw_homeservices_claro_phonemanager__calls_history_queue
+    - name: raw_homeservices_claro_phonemanager__calls_history_register
+    - name: raw_homeservices_claro_phonemanager__category
+    - name: raw_homeservices_claro_phonemanager__cep
+    - name: raw_homeservices_claro_phonemanager__customer_address
+    - name: raw_homeservices_claro_phonemanager__customer
+    - name: raw_homeservices_claro_phonemanager__growth_history
+    - name: raw_homeservices_claro_phonemanager__growth
+    - name: raw_homeservices_claro_phonemanager__lines
+    - name: raw_homeservices_claro_phonemanager__payment
+    - name: raw_homeservices_claro_phonemanager__phone_operator
+    - name: raw_homeservices_claro_phonemanager__queue_child
+    - name: raw_homeservices_claro_phonemanager__queue_group
+    - name: raw_homeservices_claro_phonemanager__queue
+    - name: raw_homeservices_claro_phonemanager__status_types
+    - name: raw_homeservices_claro_phonemanager__survey_answer
+    - name: raw_homeservices_claro_phonemanager__system_dispatch_queue
+    - name: raw_homeservices_claro_phonemanager__system_types
+    - name: raw_homeservices_claro_phonemanager__teams
+    - name: raw_homeservices_claro_phonemanager__telephony_types
+    - name: raw_homeservices_claro_phonemanager__temp_callback
+    - name: raw_homeservices_claro_phonemanager__users
+    - name: raw_homeservices_pdp_bing_ads__geolocation
+    - name: raw_homeservices_pdp_bing_ads__insights
+    - name: raw_homeservices_pdp_facebook_ads __geolocation
+    - name: raw_homeservices_pdp_facebook_ads __insights
+    - name: raw_homeservices_pdp_google_ads__ad_group
+    - name: raw_homeservices_pdp_google_ads__geo_target_constant
+    - name: raw_homeservices_pdp_google_ads__geographic_view
+    - name: raw_homeservices_pdp_google_search_console__only_pages
+    - name: raw_homeservices_pdp_google_search_console__pages
+    - name: raw_homeservices_pdp_google_search_console__queries
+    - name: raw_homeservices_pdp_google_spreadsheet__auxiliary_intake
+    - name: raw_homeservices_pdp_google_spreadsheet__campaign_whatsapp
+    - name: raw_homeservices_pdp_google_spreadsheet__Forecast_growth_data
+    - name: raw_homeservices_pdp_google_spreadsheet__gatilho_bonus_pdp_pf
+    - name: raw_homeservices_pdp_google_spreadsheet__gatilho_bonus_pdp_pj
+    - name: raw_homeservices_pdp_google_spreadsheet__products_values
+    - name: raw_homeservices_pdp_google_spreadsheet__region_segmentation
+    - name: raw_homeservices_pdp_phonemanager__action_type
+    - name: raw_homeservices_pdp_phonemanager__agents_history
+    - name: raw_homeservices_pdp_phonemanager__agents_pause_history
+    - name: raw_homeservices_pdp_phonemanager__attendances_add
+    - name: raw_homeservices_pdp_phonemanager__attendances_notes
+    - name: raw_homeservices_pdp_phonemanager__attendances_products
+    - name: raw_homeservices_pdp_phonemanager__attendances_source
+    - name: raw_homeservices_pdp_phonemanager__attendances
+    - name: raw_homeservices_pdp_phonemanager__attribute_options
+    - name: raw_homeservices_pdp_phonemanager__attributes
+    - name: raw_homeservices_pdp_phonemanager__calls_history_ivr
+    - name: raw_homeservices_pdp_phonemanager__calls_history_queue
+    - name: raw_homeservices_pdp_phonemanager__calls_history_register
+    - name: raw_homeservices_pdp_phonemanager__category
+    - name: raw_homeservices_pdp_phonemanager__cep_coverage
+    - name: raw_homeservices_pdp_phonemanager__cep
+    - name: raw_homeservices_pdp_phonemanager__customer_address
+    - name: raw_homeservices_pdp_phonemanager__customer
+    - name: raw_homeservices_pdp_phonemanager__form_clicktocall
+    - name: raw_homeservices_pdp_phonemanager__growth_history
+    - name: raw_homeservices_pdp_phonemanager__growth
+    - name: raw_homeservices_pdp_phonemanager__lines
+    - name: raw_homeservices_pdp_phonemanager__payment
+    - name: raw_homeservices_pdp_phonemanager__phone_operator
+    - name: raw_homeservices_pdp_phonemanager__queue_child
+    - name: raw_homeservices_pdp_phonemanager__queue_group
+    - name: raw_homeservices_pdp_phonemanager__queue
+    - name: raw_homeservices_pdp_phonemanager__status_types
+    - name: raw_homeservices_pdp_phonemanager__system_dispatch_queue
+    - name: raw_homeservices_pdp_phonemanager__system_types
+    - name: raw_homeservices_pdp_phonemanager__teams
+    - name: raw_homeservices_pdp_phonemanager__telephony_types
+    - name: raw_homeservices_pdp_phonemanager__temp_callback
+    - name: raw_homeservices_pdp_phonemanager__users
+    - name: raw_homeservices_pdp_tiktok_ads
+    - name: raw_platformtools_general_escaleos__transactions
+    - name: raw_platformtools_general_jaiminho__sms_status_log
+    - name: raw_platformtools_general_jaiminho__sms
+    - name: raw_lex_general_bigquery__vw_canais_table
+    - name: raw_lex_general_bigquery__vw_canais_v2_table
+    - name: raw_lex_general_bigquery__vw_cursos_lista_de_presenca_table
+    - name: raw_lex_general_bigquery__vw_cursos_obt_por_turma_pergunta_table
+    - name: raw_lex_general_bigquery__vw_cursos_obt_por_turma_table
+    - name: raw_lex_general_bigquery__vw_feed_analitico_sem_grupo_table
+    - name: raw_lex_general_bigquery__vw_feed_quem_interagiu_post_table
+    - name: raw_lex_general_bigquery__vw_meutime_humor_historico_table
+    - name: raw_lex_general_bigquery__vw_meutime_humor_table
+    - name: raw_lex_general_bigquery__vw_meutime_usuarios_logados_porgrupo_table
+    - name: raw_lex_general_bigquery__vw_meutime_usuarios_logados_table
+    - name: raw_lex_general_bigquery__vw_meutime_usuarios_porgrupo_table
+    - name: raw_lex_general_bigquery__vw_meutime_usuarios_table
+    - name: raw_lex_general_bigquery__vw_survey_help_table
+    - name: raw_lex_general_bigquery__vw_survey_learn_table
+    - name: raw_lex_general_bigquery__vw_teste_relampago_table
+    - name: raw_lex_general_bigquery__vw_wiki_obt_help_table
+    - name: raw_lex_general_bigquery__vw_wiki_obt_helpview_table
+    - name: raw_lex_general_bigquery__vw_wiki_obt_user_help_table
+    - name: raw_lex_general_google_spreadsheet __lex_cursos_sincronos_geral
+    - name: raw_infrastructure_general_google_spreadsheet__import_claro
+    - name: raw_cross _general_lead_platform__received_lead_metrics
+    - name: raw_cross _general_lead_platform__transactions
+    - name: raw_cross _general_short_io__link_clicks
+    - name: raw_cross _general_short_io__links
+    - name: raw_cross _general_tools_escale__assertiva
+    - name: raw_cross _general_whatsapp_business__whatsapp_conversation
