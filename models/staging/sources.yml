@@ -21,3 +21,9 @@ sources:
     schema: trusted_finance_general
     tables:
       - name: hubchat_escale_finance_messages
+
+  - name: trusted_homeservices_general
+    catalog: hive_metastore
+    schema: trusted_homeservices_general
+    tables:
+      - name: hubchat_escale_messages
