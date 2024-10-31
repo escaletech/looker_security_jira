@@ -11,8 +11,13 @@ sources:
       - name: raw_finance_general_hubchat_escale_finance__messages
       - name: raw_finance_general_hubchat_escale_finance__workspace
       - name: raw_homeservices_general_hubchat_chat__attendance
-      - name: raw_homeservices_general_hubchat_chat__messages_context_full
       - name: raw_homeservices_general_hubchat_chat__messages_context
       - name: raw_homeservices_general_hubchat_chat__messages_from
       - name: raw_homeservices_general_hubchat_chat__messages
       - name: raw_homeservices_general_hubchat_chat__workspace
+
+  - name: trusted_finance_general
+    catalog: hive_metastore
+    schema: trusted_finance_general
+    tables:
+      - name: hubchat_escale_finance_messages
