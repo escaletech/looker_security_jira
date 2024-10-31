@@ -1,0 +1,20 @@
+with cte_produto_data AS(
+    SELECT -1 produto_id, 'NAO INFORMADO' AS produto
+    UNION ALL
+    SELECT 1, 'ASSINATURA ENERGIA'
+    UNION ALL
+    SELECT 2, 'HOMESERVICES'
+    UNION ALL
+    SELECT 3, 'CONSIGNADO'
+    UNION ALL
+    SELECT 4, 'CONTA CARTAO'
+    UNION ALL
+    SELECT 5, 'EGV'
+    UNION ALL
+    SELECT 6, 'FGTS'
+    UNION ALL
+    SELECT 7, 'FINANCIAMENTO'
+    UNION ALL
+    SELECT 9, 'FINANCIAMENTO AUTO'
+)
+select * from cte_produto_data
