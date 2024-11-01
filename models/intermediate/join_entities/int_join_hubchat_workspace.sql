@@ -13,6 +13,7 @@ select
                 'qsIfUT21CWeAYS3I', 'mJhH9aUL15gN4t4Y', 'MUa6hKcWL7WgJY6T', 'GObxGIG8arJIaWHI') THEN 'FINANCE'
     WHEN token IN ('5ZQmrzqIg6qCHtve', 'ScDVZX8g8Q3PbiPI', 'mSfULe6UnkxYBiQ3', 
                 'ePNrmsydThDAK5ij') THEN 'HOMESERVICES'
+    ELSE 'NAO INFORMADO'
     END AS vertical,
     CASE
     WHEN token IN ('ngFvs23MiWem4jNi', 'Z7Dng45tpO41Zglw', 'egFPMxIN01mLcA3j', 
