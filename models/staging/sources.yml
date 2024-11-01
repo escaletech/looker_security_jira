@@ -27,5 +27,5 @@ sources:
     catalog: hive_metastore
     schema: trusted_homeservices_general
     tables:
-      - name: hubchat_escale_messages
-      - name: hubchat_escale_workspace
+      - name: hubchat_chat_messages
+      - name: hubchat_chat_workspace
