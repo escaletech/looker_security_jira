@@ -1,7 +1,7 @@
 with cte_join as(
-    select * from {{ ref('stg_raw__raw_homeservices_general_hubchat_chat__workspace') }}
+    select * from {{ ref('stg_trusted_finance_general__hubchat_escale_finance_workspace') }}
     union all
-    select * from {{ ref('stg_raw__raw_finance_general_hubchat_escale_finance__workspace') }}
+    select * from {{ ref('stg_trusted_homeservices_general__hubchat_escale_workspace') }}
 )
 ,cte_token_identification as (
 select 
@@ -13,7 +13,6 @@ select
                 'qsIfUT21CWeAYS3I', 'mJhH9aUL15gN4t4Y', 'MUa6hKcWL7WgJY6T', 'GObxGIG8arJIaWHI') THEN 'FINANCE'
     WHEN token IN ('5ZQmrzqIg6qCHtve', 'ScDVZX8g8Q3PbiPI', 'mSfULe6UnkxYBiQ3', 
                 'ePNrmsydThDAK5ij') THEN 'HOMESERVICES'
-    ELSE 'NAO INFORMADO'
     END AS vertical,
     CASE
     WHEN token IN ('ngFvs23MiWem4jNi', 'Z7Dng45tpO41Zglw', 'egFPMxIN01mLcA3j', 

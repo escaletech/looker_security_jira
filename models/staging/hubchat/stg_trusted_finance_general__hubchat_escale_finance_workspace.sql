@@ -2,7 +2,7 @@ with
 
 source as (
 
-    select * from {{ source('raw', 'raw_homeservices_general_hubchat_chat__workspace') }}
+    select * from {{ source('trusted_finance_general', 'hubchat_escale_finance_workspace') }}
 
 ),
 
@@ -18,12 +18,13 @@ renamed as (
         token,
         waba_id,
         workspace_id,
+        year,
         month,
-        day
+        day,
+        lake_key
 
     from source
-    where active = true
-    and assistant_name is not null
+
 )
 
 select distinct 
