@@ -1,7 +1,7 @@
 with cte_join_msg as(
-    select * from {{ ref('stg_raw__raw_homeservices_general_hubchat_chat__messages') }}
+    select * from {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages') }}
     union all
-    select * from {{ ref('stg_raw__raw_finance_general_hubchat_escale_finance__messages') }}
+    select * from {{ ref('stg_trusted_homeservices_general__hubchat_escale_messages') }}
 )
 ,cte_join_ids as(
     select
@@ -13,7 +13,9 @@ with cte_join_msg as(
         ,desc_message_source
         ,desc_message_status
         ,desc_message_text
+        ,response_type
+        ,response_source
     from cte_join_msg cjm
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = cjm.token
 )
-select distinct desc_message_source from cte_join_ids
+select * from cte_join_ids
