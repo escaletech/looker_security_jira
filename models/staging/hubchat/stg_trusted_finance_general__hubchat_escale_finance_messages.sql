@@ -10,7 +10,7 @@ renamed as (
 
     select
         __v,
-        _id,
+        _id as hubchat_chat_messages_id,
         lake_created_at,
         message_statuses_new,
         options,
@@ -51,7 +51,8 @@ renamed as (
 )
 
 select 
-    session_init message_session_id
+    hubchat_chat_messages_id
+    , session_init message_session_id
     ,token
     ,user_id
     ,timestamp tsp_message
