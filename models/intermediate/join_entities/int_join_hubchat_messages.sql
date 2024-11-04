@@ -17,6 +17,10 @@ with cte_join_msg as(
         ,options
         ,wpp_body
         ,response
+        ,case when tsp_message = tsp_first_msg then 1 else 0 end flag_first_msg
+        ,case when tsp_message = tsp_last_msg then 1 else 0 end flag_last_msg
+        ,flag_timeout
+        ,desc_code_product
     from cte_join_msg cjm
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = cjm.token
 )

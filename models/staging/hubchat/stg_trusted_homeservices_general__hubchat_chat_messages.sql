@@ -34,9 +34,9 @@ renamed as (
             WHEN options IS NOT NULL THEN options
             WHEN wpp_body IS NOT NULL THEN wpp_body
             WHEN response IS NOT NULL THEN response
-            WHEN desc_message_text IS NOT NULL THEN desc_message_text 
+            WHEN text IS NOT NULL THEN text 
         ELSE NULL 
-    END AS group_text
+        END AS group_text
 
     from source
 
@@ -54,8 +54,8 @@ select
     ,options
     ,wpp_body
     ,response
-    ,case when min(tsp_message) over(partition by message_session_id order by tsp_message) = tsp_message then 1 else 0 end as flag_first_msg
-    ,case when max(tsp_message) over(partition by message_session_id order by tsp_message desc) = tsp_message then 1 else 0 end as flag_last_msg
+    ,min(timestamp) over(partition by session_init order by timestamp) as tsp_first_msg
+    ,max(timestamp) over(partition by session_init order by timestamp desc) as tsp_last_msg
     ,case when response_type = 'cron' then 1 else 0 end flag_timeout
     ,CASE 
         WHEN CHARINDEX('**', group_text) > 0 AND CHARINDEX('**', group_text, CHARINDEX('**', group_text) + 2) > CHARINDEX('**', group_text)
@@ -63,5 +63,5 @@ select
         WHEN CHARINDEX('*', group_text) > 0 AND CHARINDEX('*', group_text, CHARINDEX('*', group_text) + 1) > CHARINDEX('*', group_text)
             THEN SUBSTRING(group_text, CHARINDEX('*', group_text) + 1, CHARINDEX('*', group_text, CHARINDEX('*', group_text) + 1) - CHARINDEX('*', group_text) - 1)
         ELSE NULL 
-        END AS code_product
+        END AS desc_code_product
  from renamed
