@@ -9,8 +9,8 @@ source as (
 renamed as (
 
     select
-        data_fim,
-        data_ini,
+        data_fim::date,
+        data_ini::date,
         faixa_fim,
         faixa_ini,
         lake_created_at,

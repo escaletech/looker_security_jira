@@ -1,4 +1,4 @@
-with a as (
+with cte_import_table as (
       SELECT 
             data_ini,
             data_fim,
@@ -11,7 +11,7 @@ with a as (
             IFNULL(faixa_fim - LEAD(faixa_fim, -1) OVER (ORDER BY data_ini, data_fim, faixa_fim ASC), faixa_fim) * valor valor_faixa
       FROM {{ ref('stg_trusted_homeservices_general__google_spreadsheet_hubchat_price') }}
 )
-, b as (            
+, cte_sum as (            
       SELECT
             data_ini,
             data_fim,
@@ -23,42 +23,39 @@ with a as (
             valor_faixa,
             ordem_faixa,
             SUM(valor_faixa) OVER (ORDER BY ordem_faixa) faixa_acumulada
-      FROM a
+      FROM cte_import_table
 )
-, c as (
+, cte_lead_range as (
       SELECT 
             *,
             LEAD(faixa_acumulada, -1) OVER (ORDER BY ordem_faixa) faixa_acumulada_ant
-      FROM b
+      FROM cte_sum
 )
-, d as(
-      SELECT
-            timestamp,
-            who,
-            response_type,
-            _id
-      FROM  refined_homeservices_general.general_hubchat_messages
-      UNION ALL
-      SELECT
-            timestamp,
-            who,
-            response_response_type,
-            _id
-      FROM trusted_finance_general.hubchat_escale_finance_messages
-)
-, e as (
+, cte_join as(
       SELECT DISTINCT
-            DATE_TRUNC('MONTH', timestamp) AS timestamp, 
-            COUNT(CASE WHEN who = 'user' OR response_type = 'cron' THEN _id ELSE NULL END) OVER (PARTITION BY DATE_TRUNC('MONTH', timestamp)) AS qnt_mgs
-      FROM d
+            DATE_TRUNC('MONTH', tsp_message)::date AS dt_cost, 
+            COUNT(CASE WHEN desc_message_source = 'user' OR response_type = 'cron' THEN hubchat_chat_messages_id ELSE NULL END) OVER (PARTITION BY to_date(tsp_message, 'yyyy-mm-01')) AS qnt_mgs
+      FROM {{ ref('stg_trusted_homeservices_general__hubchat_chat_messages') }}
+      UNION ALL
+      SELECT DISTINCT
+            DATE_TRUNC('MONTH', tsp_message)::date AS dt_cost, 
+            COUNT(CASE WHEN desc_message_source = 'user' OR response_type = 'cron' THEN hubchat_chat_messages_id ELSE NULL END) OVER (PARTITION BY to_date(tsp_message, 'yyyy-mm-01')) AS qnt_mgs
+      FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages') }}
+)
+, cte_group_by_month as (
+      SELECT
+            dt_cost, 
+            sum(qnt_mgs) AS qnt_mgs
+      FROM cte_join
+      group by 1
 )
 SELECT
-      mgs.timestamp,
+      mgs.dt_cost,
       mgs.qnt_mgs,
       CASE 
-          WHEN mgs.timestamp = DATE_TRUNC('MONTH', NOW()) 
-          THEN LEAD(ROUND((((mgs.qnt_mgs-hp.faixa_ant)*hp.valor)+hp.faixa_acumulada_ant)/mgs.qnt_mgs, 7), -1) OVER(ORDER BY mgs.timestamp ASC)
+          WHEN mgs.dt_cost = DATE_TRUNC('MONTH', NOW()) 
+          THEN LEAD(ROUND((((mgs.qnt_mgs-hp.faixa_ant)*hp.valor)+hp.faixa_acumulada_ant)/mgs.qnt_mgs, 7), -1) OVER(ORDER BY mgs.dt_cost ASC)
           ELSE ROUND((((mgs.qnt_mgs-hp.faixa_ant)*hp.valor)+hp.faixa_acumulada_ant)/mgs.qnt_mgs, 7) 
       END valor_mgs
-FROM e mgs
-LEFT JOIN c hp ON  mgs.qnt_mgs BETWEEN hp.faixa_ini AND hp.faixa_fim AND CAST(mgs.timestamp AS DATE) BETWEEN CAST(data_ini AS DATE) AND CAST(IFNULL(data_fim, NOW()) AS DATE)
+FROM cte_group_by_month mgs
+LEFT JOIN cte_lead_range hp ON  mgs.qnt_mgs BETWEEN hp.faixa_ini AND hp.faixa_fim AND dt_cost BETWEEN hp.data_ini AND IFNULL(data_fim, current_date)
