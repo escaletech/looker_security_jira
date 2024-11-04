@@ -43,4 +43,16 @@ renamed as (
 
 )
 
-select * from renamed
+select 
+    session_init message_session_id
+    ,token
+    ,user_id
+    ,timestamp tsp_message
+    ,who desc_message_source
+    ,message_status desc_message_status
+    ,text desc_message_text
+    ,response_response_type as response_type
+    ,options
+    ,wpp_body
+    ,response
+from renamed

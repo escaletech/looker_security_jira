@@ -21,9 +21,12 @@ sources:
     schema: trusted_finance_general
     tables:
       - name: hubchat_escale_finance_messages
+      - name: hubchat_escale_finance_workspace
 
   - name: trusted_homeservices_general
     catalog: hive_metastore
     schema: trusted_homeservices_general
     tables:
-      - name: hubchat_escale_messages
+      - name: hubchat_chat_messages
+      - name: hubchat_chat_workspace
+      - name: google_spreadsheet_hubchat_price

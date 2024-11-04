@@ -45,7 +45,7 @@ models:
       schema: dbt_production
     
     intermediate:
-      +materialized: ephemeral
+      +materialized: table
       catalog: hive_metastore
       schema: dbt_production
     

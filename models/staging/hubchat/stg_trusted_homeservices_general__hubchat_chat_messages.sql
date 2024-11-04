@@ -2,7 +2,7 @@ with
 
 source as (
 
-    select * from {{ source('raw', 'raw_finance_general_hubchat_escale_finance__messages') }}
+    select * from {{ source('trusted_homeservices_general', 'hubchat_chat_messages') }}
 
 ),
 
@@ -13,27 +13,38 @@ renamed as (
         _id,
         data,
         lake_created_at,
-        message_status,
+        options,
+        response,
+        response_title,
+        response_type,
         session_init,
+        status,
+        template_name,
         text,
         timestamp,
         token,
-        user_id,
         who,
         year,
         month,
-        day
+        day,
+        lake_key,
+        wpp_body,
+        user_id
 
     from source
 
 )
 
-select
+select 
     session_init message_session_id
     ,token
     ,user_id
     ,timestamp tsp_message
     ,who desc_message_source
-    ,message_status desc_message_status
+    ,status desc_message_status
     ,text desc_message_text
-from renamed
+    ,response_type 
+    ,options
+    ,wpp_body
+    ,response
+ from renamed

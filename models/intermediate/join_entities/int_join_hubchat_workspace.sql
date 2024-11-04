@@ -1,7 +1,7 @@
 with cte_join as(
-    select * from {{ ref('stg_raw__raw_homeservices_general_hubchat_chat__workspace') }}
+    select * from {{ ref('stg_trusted_finance_general__hubchat_escale_finance_workspace') }}
     union all
-    select * from {{ ref('stg_raw__raw_finance_general_hubchat_escale_finance__workspace') }}
+    select * from {{ ref('stg_trusted_homeservices_general__hubchat_chat_workspace') }}
 )
 ,cte_token_identification as (
 select 
