@@ -29,3 +29,4 @@ sources:
     tables:
       - name: hubchat_chat_messages
       - name: hubchat_chat_workspace
+      - name: google_spreadsheet_hubchat_price

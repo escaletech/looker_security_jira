@@ -2,7 +2,7 @@ with
 
 source as (
 
-    select * from {{ source('trusted_homeservices_general', 'hubchat_escale_workspace') }}
+    select * from {{ source('trusted_homeservices_general', 'hubchat_chat_workspace') }}
 
 ),
 

@@ -52,6 +52,7 @@ select
     ,message_status desc_message_status
     ,text desc_message_text
     ,response_response_type as response_type
-    ,response_source as response_source
- 
+    ,options
+    ,wpp_body
+    ,response
 from renamed
