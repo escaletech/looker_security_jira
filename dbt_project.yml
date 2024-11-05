@@ -53,3 +53,8 @@ models:
       +materialized: table
       catalog: hive_metastore
       schema: dbt_production
+    
+    trusted:
+      +materialized: table
+      catalog: hive_metastore
+      schema: dbt_trusted
