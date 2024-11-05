@@ -70,4 +70,5 @@ select
         ELSE NULL 
         END AS desc_digital_campaing
     ,flag_paid_msg
+    ,template_name hsm_template
  from renamed

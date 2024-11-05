@@ -71,4 +71,5 @@ select
     ,case when response_type = 'cron' then 1 else 0 end flag_timeout
     ,'' AS desc_digital_campaing
     ,flag_paid_msg
+    ,'' as hsm_template
 from renamed
