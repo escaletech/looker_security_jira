@@ -22,6 +22,7 @@ sources:
     tables:
       - name: hubchat_escale_finance_messages
       - name: hubchat_escale_finance_workspace
+      - name: hubchat_escale_finance_attendance
 
   - name: trusted_homeservices_general
     catalog: hive_metastore
@@ -31,3 +32,4 @@ sources:
       - name: hubchat_chat_workspace
       - name: google_spreadsheet_hubchat_price
       - name: google_spreadsheet_de_para_digital_campaign
+      - name: hubchat_chat_attendance

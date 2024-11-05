@@ -22,7 +22,7 @@ renamed as (
         timestamp,
         token,
         user_id,
-        who,
+        case when who in ('watson','hubchat') then 'hubchat' else who end who,
         wpp_message_id,
         year,
         month,
@@ -44,8 +44,8 @@ renamed as (
             WHEN response IS NOT NULL THEN response
             WHEN text IS NOT NULL THEN text 
         ELSE NULL 
-    END AS group_text
-
+    END AS group_text,
+    case when (who = "user" OR who = "cron") then 1 else 0 end flag_paid_msg
     from source
 
 )
@@ -64,7 +64,11 @@ select
     ,wpp_body
     ,response
     ,min(timestamp) over(partition by session_init order by timestamp) as tsp_first_msg
+    ,min(timestamp) over(partition by session_init, who = 'user' order by timestamp) as tsp_first_user_msg
+    ,min(timestamp) over(partition by session_init, user_id is not null order by timestamp) as tsp_first_agent_msg
+    ,max(timestamp) over(partition by session_init, who = 'hubchat', user_id is null order by timestamp) as tsp_last_bot_msg
     ,max(timestamp) over(partition by session_init order by timestamp desc) as tsp_last_msg
     ,case when response_type = 'cron' then 1 else 0 end flag_timeout
-    ,'' AS desc_code_product
+    ,'' AS desc_digital_campaing
+    ,flag_paid_msg
 from renamed
