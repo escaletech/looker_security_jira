@@ -42,19 +42,19 @@ models:
     dw:
       +materialized: table
       catalog: hive_metastore
-      schema: dbt_production
+      schema: "{% if target.name == 'default' %}{% else %}dw{% endif %}"
     
     intermediate:
       +materialized: table
       catalog: hive_metastore
-      schema: dbt_production
+      schema: "{% if target.name == 'default' %}{% else %}dbt_production{% endif %}"
     
     staging:
       +materialized: table
       catalog: hive_metastore
-      schema: dbt_production
+      schema: "{% if target.name == 'default' %}{% else %}dbt_production{% endif %}" 
     
     trusted:
       +materialized: table
       catalog: hive_metastore
-      schema: dbt_trusted
+      schema: "{% if target.name == 'default' %}{% else %}dbt_production{% endif %}"
