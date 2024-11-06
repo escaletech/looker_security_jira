@@ -53,8 +53,10 @@ renamed as (
 select 
     session_init
     ,user_id
+    ,user_id as atendente_id
     ,client_id
     ,tabulation_internal_name
     ,user_email
     ,user_fullname
+    ,timestamp
 from renamed

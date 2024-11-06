@@ -46,8 +46,10 @@ renamed as (
 select --session_init, count(*)
     session_init
     ,user_id
+    ,user_id as atendente_id
     ,'' as client_id
     ,tabulation_internal_name
     ,user_email
     ,user_fullname
+    ,timestamp
 from renamed
