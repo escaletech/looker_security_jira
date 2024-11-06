@@ -15,6 +15,7 @@ sources:
       - name: raw_homeservices_general_hubchat_chat__messages_from
       - name: raw_homeservices_general_hubchat_chat__messages
       - name: raw_homeservices_general_hubchat_chat__workspace
+      - name: raw_homeservices_claro_phonemanager__calls_history_register
 
   - name: trusted_finance_general
     catalog: hive_metastore
