@@ -1,60 +1,51 @@
-with cte_select as(
+with cte_context (
     SELECT
         *
-        , 'historico' as type_database
-    FROM refined_finance_general.general_hubchat_fact
-)
-,cte_from as (
-    SELECT
-          *, 'historico' as type_database
-      FROM refined_finance_general.general_hubchat_from
-)
-,cte_context (
-    SELECT
-          *, 'historico' as type_database
-      FROM refined_finance_general.general_hubchat_context
-      GROUP BY ALL
-)
+    FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }}
+    where welcome = 'true'
+    and token = 'C3Dk8S2EbKCmtdqB'
 
+)
+, cte_calculated as (
 SELECT
-    session_id,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' THEN general_hubchat_from.session_init ELSE NULL END `general_hubchat_from_total_first_interaction_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.opt_out= 'true' THEN 1 ELSE 0 END `general_hubchat_from_total_first_interaction_optout_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.opt_outIS NULL THEN 1 ELSE 0 END `general_hubchat_from_total_first_interaction_optin_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.unlock_inss IS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_unlock_inss_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.product_descriptionIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_simulation_geral_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.product_descriptionIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_description_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.simulation_productIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_simulation_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.show_productIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_show_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.loan_amount IS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_loan_amount_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.show_productIS NOT NULL AND general_hubchat_context.birth_dateIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_personal_data_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.show_productIS NOT NULL AND general_hubchat_context.birth_dateIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_birth_data_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.marital_statusIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_marital_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.genderIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_gender_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.place_of_birth IS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_place_of_birth_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.birth_city IS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_birth_city_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.national_identityIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_rg_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.issuer_national_identityIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_issuer_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.issue_state_national_identityIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_uf_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.issuer_national_identityIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_data_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.address_zip_codeIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_zipcode_geral_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.address_zip_codeIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_zipcode_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.address_streetIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_street_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.address_numberIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_number_address_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.address_neighborhoodIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_neighborhood_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.address_cityIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_city_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.address_stateIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_state_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.bankIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_bank_geral_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.bankIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_bank_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.bank_agencyIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_agency_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.bank_accountIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_bank_account_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.bank_confirmationIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_bank_confirmation_product_consig`,
-    CASE WHEN general_hubchat_context.welcome = 'true' AND general_hubchat_context.token = 'C3Dk8S2EbKCmtdqB' AND general_hubchat_context.transfer_humanIS NOT NULL THEN 1 ELSE 0 END `general_hubchat_from_transfer_human_product_consig`
+    c.message_session_id
+    ,f.timestamp_init
+    ,1 AS welcome
+    ,CASE WHEN opt_out = 'true' THEN 1 ELSE 0 END nao_quer_contato
+    ,CASE WHEN opt_out IS NULL THEN 1 ELSE 0 END deseja_prosseguir
+    ,CASE WHEN unlock_inss IS NOT NULL THEN 1 ELSE 0 END tempestividade
+    ,CASE WHEN product_description IS NOT NULL THEN 1 ELSE 0 END simulacao
+    ,CASE WHEN product_description IS NOT NULL THEN 1 ELSE 0 END opcoes_emprestivo
+    ,CASE WHEN simulation_product IS NOT NULL THEN 1 ELSE 0 END simulacao_dos_valores
+    ,CASE WHEN show_product IS NOT NULL THEN 1 ELSE 0 END selecao_valor
+    ,CASE WHEN loan_amount IS NOT NULL THEN 1 ELSE 0 END fonte_renda
+    ,CASE WHEN show_product IS NOT NULL AND birth_date IS NOT NULL THEN 1 ELSE 0 END dados_pessoais
+    ,CASE WHEN show_product IS NOT NULL AND birth_date IS NOT NULL THEN 1 ELSE 0 END data_de_nascimento
+    ,CASE WHEN marital_status IS NOT NULL THEN 1 ELSE 0 END estado_civil
+    ,CASE WHEN gender IS NOT NULL THEN 1 ELSE 0 END genero
+    ,CASE WHEN place_of_birth IS NOT NULL THEN 1 ELSE 0 END estado_de_nascimento1
+    ,CASE WHEN birth_city IS NOT NULL THEN 1 ELSE 0 END estado_de_nascimento2
+    ,CASE WHEN national_identity IS NOT NULL THEN 1 ELSE 0 END rg
+    ,CASE WHEN issuer_national_identity IS NOT NULL THEN 1 ELSE 0 END emissor_rg
+    ,CASE WHEN issue_state_national_identity IS NOT NULL THEN 1 ELSE 0 END uf_rg
+    ,CASE WHEN issuer_national_identity IS NOT NULL THEN 1 ELSE 0 END data_emissao_rg
+    ,CASE WHEN address_zip_code IS NOT NULL THEN 1 ELSE 0 END dados_endereco
+    ,CASE WHEN address_zip_code IS NOT NULL THEN 1 ELSE 0 END cep
+    ,CASE WHEN address_street IS NOT NULL THEN 1 ELSE 0 END logradouro
+    ,CASE WHEN address_number IS NOT NULL THEN 1 ELSE 0 END nro_endereco
+    ,CASE WHEN address_neighborhood IS NOT NULL THEN 1 ELSE 0 END bairro
+    ,CASE WHEN address_city IS NOT NULL THEN 1 ELSE 0 END cidade
+    ,CASE WHEN address_state IS NOT NULL THEN 1 ELSE 0 END estado
+    ,CASE WHEN bank IS NOT NULL THEN 1 ELSE 0 END dados_bancarios
+    ,CASE WHEN bank IS NOT NULL THEN 1 ELSE 0 END banco
+    ,CASE WHEN bank_agency IS NOT NULL THEN 1 ELSE 0 END nro_agencia
+    ,CASE WHEN bank_account IS NOT NULL THEN 1 ELSE 0 END conta_corrente
+    ,CASE WHEN bank_confirmation IS NOT NULL THEN 1 ELSE 0 END confirma_dados_bancarios
+    ,CASE WHEN transfer_human IS NOT NULL THEN 1 ELSE 0 END transferencia_consultor_geral
 
-FROM cte_select AS general_hubchat_fact
-LEFT JOIN cte_from AS general_hubchat_from ON general_hubchat_fact.session_init = general_hubchat_from.session_init AND general_hubchat_fact.token = general_hubchat_from.token
-LEFT JOIN cte_context AS general_hubchat_context ON general_hubchat_fact.session_init = general_hubchat_context.session AND general_hubchat_fact.token = general_hubchat_context.token
-GROUP BY
-    (DATE_FORMAT(general_hubchat_from.timestamp_init , 'yyyy-MM-dd'))
-ORDER BY
-    1 DESC
+FROM cte_context c
+    join {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_from') }} f on f.message_session_id = c.message_session_id
+)
+select
+    *
+from cte_calculated

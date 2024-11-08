@@ -38,6 +38,10 @@ select
     WHEN token IN ('5ZQmrzqIg6qCHtve') THEN 'ASSINATURA ENERGIA'
     WHEN token IN ('ScDVZX8g8Q3PbiPI', 'mSfULe6UnkxYBiQ3', 'ePNrmsydThDAK5ij') THEN 'NAO INFORMADO'
     END AS product
+    CASE
+        WHEN token in ('C3Dk8S2EbKCmtdqB') then 'FINANCE - CONSIGNADO'
+        ELSE 'NAO INFORMADO'
+        end funil
     ,token
     ,assistant_name
 from cte_join

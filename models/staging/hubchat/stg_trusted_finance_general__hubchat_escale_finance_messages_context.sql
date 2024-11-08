@@ -253,7 +253,43 @@ renamed as (
 
 select 
     session message_session_id
-    ,regexp_replace(numero_telefone, '[^0-9]', '') AS client_id    
+    ,timestamp
+    ,regexp_replace(numero_telefone, '[^0-9]', '') AS client_id
+    ,token
+    ,welcome
+    ,opt_out
+    ,unlock_inss
+    ,product_description
+    ,simulation_product
+    ,show_product
+    ,loan_amount
+    ,birth_date
+    ,marital_status
+    ,gender
+    ,place_of_birth
+    ,birth_city
+    ,national_identity
+    ,issuer_national_identity
+    ,issue_state_national_identity
+    ,address_zip_code
+    ,address_street
+    ,address_number
+    ,address_neighborhood
+    ,address_city
+    ,address_state
+    ,bank
+    ,bank_agency
+    ,bank_account
+    ,bank_confirmation
+    ,transfer_human
+    ,individual_registration
+    ,product_deal_stage_description
+    ,type_seller_description
+    ,eligible_product
+    ,product_confirmation
+    ,down_payment_type
+    ,income_value
+    ,type_contact
 from renamed
 where true
     and first_position = 0
