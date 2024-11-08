@@ -13,7 +13,7 @@ with cte_join_tables as (
 )
 ,cte_metrics as (
     select 
-        hubchat_chat_messages_id
+        hubchat_chat_messages_id --conversacional_id
         ,vertical_id
         ,marca_id
         ,produto_id
@@ -39,6 +39,7 @@ with cte_join_tables as (
         ,flag_first_agent_msg
         ,flag_last_bot_msg
         ,valor_mgs as vlr_custo_menssagem
+        --,vlr_tempo_resposta
         ,order_msg as nr_order_msg
     from cte_join_tables
 )
