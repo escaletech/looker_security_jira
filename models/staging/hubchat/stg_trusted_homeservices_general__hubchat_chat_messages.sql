@@ -37,7 +37,8 @@ renamed as (
             WHEN text IS NOT NULL THEN text 
         ELSE NULL 
         END AS group_text,
-        case when (who = "user" OR who = "cron") then 1 else 0 end flag_paid_msg
+        case when (who = "user" OR who = "cron") then 1 else 0 end flag_paid_msg,
+        lag(timestamp) over(partition by session_init order by timestamp) lag_tsp_message
 
     from source
 
@@ -71,4 +72,5 @@ select
         END AS desc_digital_campaing
     ,flag_paid_msg
     ,template_name hsm_template
+    ,timestampdiff(SECOND, lag_timestamp, timestamp)/60 vlr_tempo_resposta
  from renamed
