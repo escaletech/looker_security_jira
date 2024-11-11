@@ -46,3 +46,4 @@ sources:
       - name: phonemanager_attributes
       - name: phonemanager_growth_history
       - name: phonemanager_attendances
+      - name: phonemanager_attendances_products
