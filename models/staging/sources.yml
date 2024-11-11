@@ -45,3 +45,4 @@ sources:
     tables:
       - name: phonemanager_attributes
       - name: phonemanager_growth_history
+      - name: phonemanager_attendances
