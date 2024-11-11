@@ -1,11 +1,11 @@
---[BV - FINANC] Funil Inbound Aut
+--02.01. [BV - FINANC] Funil Outbound Aut
 with cte_context (
     SELECT
-        *
+        *         
     FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }}
     where true
         --and welcome = 'true'
-        and type_contact = 'inbound'
+        and type_contact = 'outbound'
         and token = 'ngFvs23MiWem4jNi'
 )
 , cte_calculated as (
@@ -13,7 +13,7 @@ SELECT
     c.message_session_id
     ,c.timestamp
     ,1 AS conversas
-    ,CASE WHEN welcome = 'true' and individual_registration = 'true' THEN 1 ELSE 0 END identificacao
+    ,CASE WHEN welcome = 'true' THEN 1 ELSE 0 END interacao
     ,CASE WHEN welcome = 'true' and product_deal_stage_description IS NOT NULL THEN 1 ELSE 0 END segmento_de_compra
     ,CASE WHEN welcome = 'true' and type_seller_description IS NOT NULL THEN 1 ELSE 0 END tipo_compra
     ,CASE WHEN welcome = 'true' and eligible_product IS NOT NULL THEN 1 ELSE 0 END pre_analise
@@ -23,11 +23,13 @@ SELECT
     ,CASE WHEN welcome = 'true' and gender IS NOT NULL THEN 1 ELSE 0 END dados_pessoais
     ,CASE WHEN welcome = 'true' and income_value IS NOT NULL THEN 1 ELSE 0 END ocupacao_renda
     ,CASE WHEN welcome = 'true' and address_number IS NOT NULL THEN 1 ELSE 0 END endereco_tel_cliente
+
 FROM cte_context c
     join {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_from') }} f on f.message_session_id = c.message_session_id
 )
 select
     *
-from cte_calculated
+from cte_calculated c
+
 
 --valores proximos mas não bateram

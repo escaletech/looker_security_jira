@@ -38,3 +38,9 @@ sources:
       - name: hubchat_chat_attendance
       - name: hubchat_chat_messages_context
       - name: hubchat_chat_messages_from
+
+  - name: refined_homeservices_general
+    catalog: hive_metastore
+    schema: refined_homeservices_general
+    tables:
+      - name: phonemanager_attributes
