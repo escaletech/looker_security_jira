@@ -44,3 +44,4 @@ sources:
     schema: refined_homeservices_general
     tables:
       - name: phonemanager_attributes
+      - name: phonemanager_growth_history
