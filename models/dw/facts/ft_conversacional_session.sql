@@ -1,19 +1,20 @@
+with cte_group as (
 SELECT
     message_session_id,
     
     -- Seleciona o valor de `vertical_id`, `marca_id` e `produto_id` se for constante na sessão
-    MAX(vertical_id) AS vertical_id,
-    MAX(marca_id) AS marca_id,
-    MAX(produto_id) AS produto_id,
-    MAX(flowstep_id) as flowstep_id
+    vertical_id,
+    marca_id,
+    produto_id,
+    flowstep_id,
     
     -- Seleciona o primeiro `atendente_id` e `client_id` encontrados na sessão
-    MIN(atendente_id) AS atendente_id,
-    MIN(client_id) AS client_id,
+    atendente_id,
+    client_id,
     
     -- Seleciona a campanha e data, caso sejam constantes na sessão
-    count(digital_campaing_id) AS digital_campaing_id,
     MIN(data_id) AS data_id,
+    count(digital_campaing_id) AS digital_campaing_id,
     
     -- Agrega a timestamp para pegar a última mensagem da sessão
     MIN(tsp_message) AS tsp_first_message,
@@ -39,4 +40,6 @@ SELECT
 FROM
     {{ ref('ft_conversacional') }}
 GROUP BY
-    message_session_id
+    all
+)
+select * from cte_group

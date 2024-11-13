@@ -4,6 +4,7 @@
 with cte_context (
     SELECT
         c.*
+        ,f.desc_flowstep
     FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }} c
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
     left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
@@ -14,6 +15,7 @@ with cte_context (
 , cte_calculated as (
 SELECT
     c.message_session_id
+    ,c.desc_flowstep
     ,f.timestamp_init
     ,1 AS welcome
     ,CASE WHEN opt_out = 'true' THEN 1 ELSE 0 END nao_quer_contato

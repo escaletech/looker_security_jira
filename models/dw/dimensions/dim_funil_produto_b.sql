@@ -2,6 +2,7 @@
 with cte_context (
     SELECT
         c.*
+        ,f.desc_flowstep
     FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }} c
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
     left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
@@ -13,6 +14,7 @@ with cte_context (
 , cte_calculated as (
 SELECT
     c.message_session_id
+    ,c.desc_flowstep
     ,c.timestamp
     ,1 AS conversas
     ,CASE WHEN welcome = 'true' and individual_registration = 'true' THEN 1 ELSE 0 END identificacao

@@ -1,7 +1,8 @@
 --01. [ITAÚ - FGTS] Funil Conversacional
 with cte_context as (
     SELECT
-        c.*         
+        c.*   
+        ,f.desc_flowstep      
     FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }} c
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
     left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
@@ -12,6 +13,7 @@ with cte_context as (
 , cte_calculated as (
 SELECT
     c.message_session_id
+    ,c.desc_flowstep
     ,c.timestamp
     ,CASE WHEN c.welcome = 'true' THEN 1 ELSE 0 END AS welcome
     ,CASE WHEN c.individual_registration = 'true' THEN 1 ELSE 0 END AS identificacao_cpf
