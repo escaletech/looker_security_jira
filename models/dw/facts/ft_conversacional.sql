@@ -17,6 +17,7 @@ with cte_join_tables as (
         ,vertical_id
         ,marca_id
         ,produto_id
+        ,flowstep_id
         ,message_session_id
         ,atendente_id
         ,client_id

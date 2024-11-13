@@ -1,8 +1,8 @@
 -- homeservice oi
 with cte_context as (
     SELECT
-        *    
-    FROM {{ ref('stg_trusted_homeservices_general__hubchat_chat_messages_context') }}
+        c.*    
+    FROM {{ ref('stg_trusted_homeservices_general__hubchat_chat_messages_context') }} c
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
     left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
     where true

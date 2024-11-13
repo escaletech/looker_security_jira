@@ -22,7 +22,7 @@ from cte_join j
 left join cte_unique_user as uu on uu.user_email = j.user_email
 )
 select 
-    hubchat_chat_messages_id
+    message_session_id
     ,user_id as atendente_id
     ,user_email
 from cte_backfill
