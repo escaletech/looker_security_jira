@@ -51,7 +51,7 @@ renamed as (
 )
 
 select 
-    session_init
+    session_init message_session_id
     ,user_id
     ,user_id as atendente_id
     ,client_id

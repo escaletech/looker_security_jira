@@ -37,4 +37,18 @@ sources:
       - name: google_spreadsheet_de_para_digital_campaign
       - name: hubchat_chat_attendance
       - name: hubchat_chat_messages_context
-      - name: hubchat_escale_messages_from
+      - name: hubchat_chat_messages_from
+
+  - name: refined_homeservices_general
+    catalog: hive_metastore
+    schema: refined_homeservices_general
+    tables:
+      - name: phonemanager_attributes
+      - name: phonemanager_growth_history
+      - name: phonemanager_attendances
+      - name: phonemanager_attendances_products
+      - name: phonemanager_payment
+      - name: phonemanager_system_types
+      - name: phonemanager_calls_history_queue
+      - name: phonemanager_calls_history_register
+      - name: phonemanager_telephony_types
