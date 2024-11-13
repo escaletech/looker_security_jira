@@ -28,4 +28,8 @@ renamed as (
 
 )
 
-select * from renamed
+select 
+    session_init as message_session_id 
+    ,timestamp_init
+    ,token
+ from renamed

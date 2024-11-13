@@ -4,9 +4,9 @@ source as (
 
     select * from {{ source('trusted_homeservices_general', 'hubchat_chat_messages') }}
 
-),
+)
 
-renamed as (
+,renamed as (
 
     select
         __v,
@@ -23,7 +23,7 @@ renamed as (
         text,
         timestamp,
         token,
-        case when who in ('watson','hubchat') then 'hubchat' else who end who,
+        case when who = 'watson' then 'hubchat' else who end desc_message_source,
         year,
         month,
         day,
@@ -37,20 +37,20 @@ renamed as (
             WHEN text IS NOT NULL THEN text 
         ELSE NULL 
         END AS group_text,
-        case when (who = "user" OR who = "cron") then 1 else 0 end flag_paid_msg,
+        case when (who = 'user' OR who = 'cron') then 1 else 0 end flag_paid_msg,
         lag(timestamp) over(partition by session_init order by timestamp) lag_tsp_message
 
     from source
 
 )
 
-select 
+select
     hubchat_chat_messages_id
     ,session_init message_session_id
     ,token
     ,user_id
     ,timestamp tsp_message
-    ,who desc_message_source
+    ,desc_message_source
     ,status desc_message_status
     ,text desc_message_text
     ,response_type 
@@ -58,9 +58,9 @@ select
     ,wpp_body
     ,response
     ,min(timestamp) over(partition by session_init order by timestamp) as tsp_first_msg
-    ,min(timestamp) over(partition by session_init, who = 'user' order by timestamp) as tsp_first_user_msg
+    ,min(timestamp) over(partition by session_init, desc_message_source = 'user' order by timestamp) as tsp_first_user_msg
     ,min(timestamp) over(partition by session_init, user_id is not null order by timestamp) as tsp_first_agent_msg
-    ,max(timestamp) over(partition by session_init, who = 'hubchat', user_id is null order by timestamp) as tsp_last_bot_msg
+    ,max(timestamp) over(partition by session_init, desc_message_source = 'hubchat', user_id is null order by timestamp) as tsp_last_bot_msg
     ,max(timestamp) over(partition by session_init order by timestamp desc) as tsp_last_msg
     ,case when response_type = 'cron' then 1 else 0 end flag_timeout
     ,CASE 
@@ -71,6 +71,6 @@ select
         ELSE NULL 
         END AS desc_digital_campaing
     ,flag_paid_msg
-    ,template_name hsm_template
-    ,timestampdiff(SECOND, lag_timestamp, timestamp)/60 vlr_tempo_resposta
+    /*,template_name hsm_template
+    ,timestampdiff(SECOND, lag_tsp_message, timestamp)/60 vlr_tempo_resposta*/
  from renamed

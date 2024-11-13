@@ -1,10 +1,9 @@
 --02.01. [BV - FINANC] Funil Outbound Aut
-with cte_context (
+with cte_context as (
     SELECT
         *         
     FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }}
     where true
-        --and welcome = 'true'
         and type_contact = 'outbound'
         and token = 'ngFvs23MiWem4jNi'
 )

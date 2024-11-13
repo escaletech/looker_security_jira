@@ -218,5 +218,22 @@ renamed as (
 
 select 
     session message_session_id
+    ,timestamp
     ,regexp_replace(numero_telefone, '[^0-9]', '') AS client_id
+    ,token
+    ,welcome
+    ,customer
+    ,start_viability
+    ,start_checkout
+    ,qualification
+    ,finish_viability
+    ,finish_checkout
+    ,show_product
+    ,viability_product
+    ,address_validate
+    ,order
+    ,type_product
+    ,select_product
+    ,product_description
+    ,viability_product_description
 from renamed

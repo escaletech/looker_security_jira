@@ -1,0 +1,570 @@
+WITH cte_attributes AS (
+    SELECT 
+        *
+    FROM {{ ref('stg_refined_homeservices_general__phonemanager_attributes') }}
+)
+, cte_growth_history ghcte AS ( 
+    SELECT 
+        *
+    FROM {{ ref('stg_refined_homeservices_general__phonemanager_growth_history') }}
+)
+,cte_attendances a as (
+    SELECT
+        *
+    FROM {{ ref('stg_refined_homeservices_general__phonemanager_attendances') }} 
+    WHERE  type_id in (1,2,3) AND DATE(created_at) >= CAST('2020-01-01' AS DATE)
+)
+, cte_attendances_products at_products_cte AS (
+    SELECT ap.attendance_id, 
+            ap.product_id, 
+            ap.brand,
+            ap.number,
+            MIN(CASE WHEN ap.group_attribute = 'vendedor' THEN ap.value_name ELSE NULL END) AS v,
+            MIN(CASE WHEN ap.group_attribute = 'pacote' THEN ap.value_name ELSE NULL END) AS pa,
+            MIN(CASE WHEN ap.group_attribute = 'status_produto' THEN ap.value_name ELSE NULL END) AS sp,
+            MIN(CASE WHEN ap.group_attribute = 'finalizacao' then ap.value_name else NULL end) AS f,
+            MIN(CASE WHEN ap.group_attribute = 'data_agendamento' then ap.value_name else NULL end) AS da,
+            MIN(CASE WHEN ap.group_attribute = 'data_reagendamento' then ap.value_name else NULL end) AS dra,
+            MIN(CASE WHEN ap.group_attribute = 'data_habilitacao' or ap.group_attribute = 'habilitacao' then ap.value_name else NULL end) AS h,
+            MIN(CASE WHEN ap.group_attribute = 'desistencia' then ap.value_name else NULL end) AS d,
+            MIN(CASE WHEN ap.group_attribute = 'estorno' then ap.value_name else NULL end)  AS e,
+            MIN(CASE WHEN ap.group_attribute = 'data_cancelamento' then ap.value_name else NULL end)  AS dc,
+            MIN(CASE WHEN ap.group_attribute = 'data_san' then ap.value_name else NULL end) AS ds,
+            MIN(CASE WHEN ap.group_attribute = 'data_geracao_order' then ap.value_name else NULL end) AS dgo,
+            MIN(CASE WHEN ap.group_attribute = 'proposta' then ap.value_name else NULL end)  AS pr,
+            MIN(CASE WHEN ap.group_attribute = 'contrato' THEN ap.value_name ELSE NULL END) AS co,
+            MIN(CASE WHEN ap.group_attribute = 'tipodomicilio' AND ap.brand != 'tim' THEN ap.value_name ELSE NULL END) AS td,
+            MIN(CASE WHEN ap.group_attribute = 'vendedor'  THEN UPPER(ap.value_name) ELSE NULL END) AS vp,     
+            MIN(CASE WHEN ap.group_attribute = 'team_prod' THEN UPPER(ap.value_name) ELSE NULL END) AS tp,
+            MIN(CASE WHEN ap.group_attribute = 'type_technology' THEN UPPER(ap.value_name) ELSE NULL END) AS tt,
+            CAST(REPLACE(REPLACE(MIN(CASE WHEN ap.attribute_name IN ('ordem_internet_oi', 'ordem_fixo_oi') THEN UPPER(ap.value_name) ELSE NULL END),'-', ''),'Nº da OS/BD: ', '') AS INT) AS oo
+    FROM {{ ref('stg_refined_homeservices_general__phonemanager_attendances_products') }} ap
+    GROUP BY 1, 2, 3, 4
+)
+, cte_pagamento pag_ades_e_mens_cte AS (
+    SELECT 
+        p.id
+        , p.brand,
+        MIN(CASE WHEN p.payment_category = 'mensalidade' THEN st.description ELSE NULL END) AS me,
+        MIN(CASE WHEN p.payment_category = 'adesao' THEN st.description ELSE NULL END) AS ad
+    FROM {{ ref('stg_refined_homeservices_general__phonemanager_payment') }} p
+    LEFT JOIN {{ ref('stg_refined_homeservices_general__phonemanager_system_types') }} st ON st.id = p.payment_type AND st.brand = p.brand
+    WHERE 
+        p.payment_category = 'mensalidade' 
+        OR p.payment_category = 'adesao'
+        AND EXISTS (
+            SELECT *
+            FROM {{ ref('stg_refined_homeservices_general__phonemanager_attendances') }} a
+            WHERE  a.type_id in (1,2,3)
+                AND a.payment_monthly_id = p.id
+                AND a.brand = p.brand
+            )
+    GROUP BY 1, 2
+)
+, cte_history_queue chq_ AS (
+    SELECT  distinct 
+            id,
+            agent,                                        
+            user_id,                                      
+            team_id,                                      
+            COALESCE(queue_child,0) AS queue_child,                                                   
+            timestamp,                                                        
+            lines_id,                                    
+            queue_log_modality_types_id,                  
+            queue_log_verb_types_id,   
+            queue_log_line_types_id,                
+            token,                                        
+            token_group,                                 
+            growth_history_id,                                                                                    
+            queue,
+            brand,
+            call_id,
+            username,
+            team_description,
+            lines_id,
+            FIRST(lines_id) OVER(PARTITION BY token_group order by timestamp) AS line_id
+    FROM  {{ ref('stg_refined_homeservices_general__phonemanager_calls_history_queue') }} 
+    WHERE timestamp >= add_months(CURRENT_TIMESTAMP,-24)       
+)
+, cte_history_queue_short as(
+    SELECT 
+        DISTINCT
+        token,
+        token_group,
+        brand
+    FROM cte_history_queue
+)
+, cte_join_register_queue chr AS (
+    SELECT 
+        chr.ivr,
+        chr.token,
+        chq.token_group,
+        chr.brand
+    FROM {{ ref('stg_refined_homeservices_general__phonemanager_calls_history_register') }} chr
+    LEFT JOIN cte_history_queue_short chq ON chq.token = chr.token AND chq.brand = chr.brand
+)
+,cte_union_brands as (
+    SELECT 
+        cp.verb_id,
+        cp.token,
+        cp.brand
+  FROM {{ ref('stg_refined_homeservices_general__phonemanager_calls_history_register') }} cp
+  WHERE cp.queue IN (603,612,680,690,691) AND 
+        cp.brand = 'pdp'  
+    UNION ALL
+  SELECT 
+        cc.verb_id,
+        cc.token,
+        cc.brand
+  FROM {{ ref('stg_refined_homeservices_general__phonemanager_calls_history_register') }} cc
+  WHERE cc.queue IN (606, 605) AND 
+        cc.brand = 'claro'
+)
+,cte_verb_filter as(
+    SELECT
+        id,
+        description,
+        brand
+    FROM {{ ref('stg_refined_homeservices_general__phonemanager_telephony_types') }}
+    WHERE UPPER(reference) LIKE '%VERB%'
+)
+,cte_join_brands_filters as (
+    SELECT 
+        * 
+    from cte_union_brands
+    LEFT JOIN cte_verb_filter tts ON tts.id = ccp.verb_id AND tts.brand = ccp.brand
+)
+,cte_callback_sql callback_sql AS (
+    SELECT
+        ccp.verb_id,
+        ccp.token,
+        ccp.brand,
+        tts.description
+    FROM cte_join_brands_filters
+)
+,cl AS (
+    SELECT DISTINCT 
+        chq.token, 
+        chq.brand, 
+        ghcte.campanha,
+        ghcte.pagina,
+        ghcte.fonte,
+        ghcte.midia
+    FROM chq_ as chq
+    LEFT JOIN ghcte ON chq.growth_history_id = ghcte.id  AND chq.brand = ghcte.brand
+)
+,hubchat AS (
+ SELECT
+        session AS session_init,
+        coalesce(campanha_cod_plan,campanha) AS campanha,
+        coalesce(medium_cod_plan,medium) AS medium,
+        coalesce(campanha_cod_plan,source) AS source
+  FROM refined_homeservices_general.general_hubchat_context 
+  WHERE order = "true"      
+  GROUP BY 1, 2, 3, 4
+)
+,asrc AS (
+    SELECT
+        ac.session_id_mkt,
+        ac.phone,
+        ac.queue_number,
+        CASE 
+            WHEN hc.source <> NULL OR hc.source <> '' THEN hc.source 
+            WHEN cl.fonte <> NULL OR cl.fonte <> '' THEN cl.fonte 
+            WHEN ltd.campaign_utm_source <> NULL OR ltd.campaign_utm_source <> '' THEN ltd.campaign_utm_source
+            WHEN ac.source_mkt <> NULL OR ac.source_mkt <> '' THEN ac.source_mkt  
+            ELSE NULL 
+            END AS source_mkt,
+        ac.lead_source_mkt,
+        CASE
+            WHEN hc.medium <> NULL OR hc.medium <> '' THEN hc.medium
+            WHEN cl.midia <> NULL OR cl.midia <> '' THEN cl.midia
+            WHEN ltd.campaign_utm_medium <> NULL OR ltd.campaign_utm_medium <> '' THEN ltd.campaign_utm_medium
+            WHEN ac.medium_mkt <> NULL OR ac.medium_mkt <> '' THEN ac.medium_mkt  
+            ELSE NULL 
+            END AS medium_mkt,
+        CASE 
+            WHEN hc.campanha <> NULL OR hc.campanha <> '' THEN hc.campanha
+            WHEN cl.campanha <> NULL OR cl.campanha <> '' THEN cl.campanha
+            WHEN ltd.campaign_utm_campaign <> NULL OR ltd.campaign_utm_campaign <> '' THEN ltd.campaign_utm_campaign
+            WHEN ac.campaign_name_mkt <> NULL OR ac.campaign_name_mkt <> '' THEN ac.campaign_name_mkt 
+            ELSE NULL 
+            END AS campaign_name_mkt,
+        ac.brand,
+        ac.attendance_id,
+        ac.main_connection,
+        ac.token,
+        ac.line_id,
+        ac.modality,
+        CASE
+            WHEN UPPER(ac.lead_source_mkt) ='WPP_FULLDIGITAL' AND ac.brand ='claro' THEN 'Claro - Whatsapp AFF'
+            WHEN UPPER(ac.lead_source_mkt) ='WPP_ESCALETESTE' AND ac.brand ='claro' THEN 'Claro - Whatsapp AFF'
+            WHEN UPPER(ac.lead_source_mkt) ='WPP_CLARODEALER' AND ac.brand ='claro' THEN 'Claro - Whatsapp'
+            WHEN UPPER(ac.lead_source_mkt) ='CHECKOUT_CLARO_V1' AND ac.brand ='claro' THEN 'Claro - Checkout AFF'
+            WHEN UPPER(ac.lead_source_mkt) ='CHECKOUT' AND ac.brand ='claro' THEN 'Claro - Checkout AFF'
+            WHEN UPPER(ac.lead_source_mkt) ='ESCALE_TESTE' AND ac.brand ='claro' THEN 'Claro - Checkout AFF'
+            WHEN UPPER(ac.lead_source_mkt) ='HYBRID_CART' AND ac.brand ='claro' THEN 'Claro - Checkout AFF'
+            WHEN UPPER(ac.lead_source_mkt) ='WHATSAPP_OI' AND ac.brand ='pdp' THEN 'Oi - Whatsapp'
+            WHEN UPPER(ac.lead_source_mkt) ='WHATSAPP_OFICIAL_OI' AND ac.brand ='pdp' THEN 'Oi - Whatsapp'
+            WHEN UPPER(ac.lead_source_mkt) ='CHECKOUT_OFICIAL' AND ac.brand ='pdp' THEN 'Oi - Checkout'
+            WHEN UPPER(ac.lead_source_mkt) ='CHECKOUT' AND ac.brand ='pdp' THEN 'Oi - Checkout'
+            WHEN UPPER(ac.lead_source_mkt) ='CHECKOUTDEALERS' AND ac.brand ='pdp' THEN 'Oi - Checkout'
+            ELSE 'CDV'
+        END AS origem_venda,
+        ac.lead_id
+    FROM refined_homeservices_general.phonemanager_attendances_source ac
+    LEFT JOIN trusted_homeservices_claro.lead_platform_leads ltd ON ltd._id = ac.lead_id AND ltd._id is not null AND ltd._id <> ""
+    LEFT JOIN cl AS cl ON ac.token = cl.token AND ac.brand = cl.brand
+    LEFT JOIN hubchat hc ON hc.session_init  = ac.session_id_mkt 
+)
+, cte_union_queue_and_child as (
+    SELECT 
+        q.number
+        ,q.queue_group_types_id
+        ,NULL AS child
+        ,q.brand
+    FROM refined_homeservices_general.phonemanager_queue q
+    UNION ALL
+    SELECT 
+        q.number
+        ,qc.queue_group_types_id
+        ,qc.child
+        ,qc.brand
+    FROM refined_homeservices_general.phonemanager_queue_child qc
+    LEFT JOIN refined_homeservices_general.phonemanager_queue q ON q.id = qc.queue_id AND q.brand = qc.brand
+)
+, queues as (
+    SELECT 
+        t1.number AS fila,
+        t1.child AS fila_filha,
+        qg.description AS grupo,
+        t1.brand
+    FROM cte_union_queue_and_child t1
+    LEFT JOIN refined_homeservices_general.phonemanager_queue_group qg ON qg.id = t1.queue_group_types_id AND qg.brand = t1.brand
+)
+, chq as (
+    SELECT distinct 
+        brand, 
+        token,
+        token_group,
+        id,
+        queue,
+        queue_child,
+        growth_history_id,
+        queue_log_verb_types_id,
+        queue_log_modality_types_id,
+        row_number() OVER(PARTITION BY token_group order by timestamp)    as flg_first_att,
+        FIRST(lines_id) OVER(PARTITION BY token_group order by timestamp) AS line_id,
+        call_id,
+        user_id,
+        team_id,
+        timestamp,
+        lines_id
+    FROM chq_
+) 
+    where flg_first_att = 1),
+    order_agent as (select distinct * from(
+    SELECT chq.brand, 
+    chq.call_id,
+    chq.id,
+    row_number() OVER(PARTITION BY call_id order by timestamp)    as flg_first_att,
+    FIRST(lines_id) OVER(PARTITION BY call_id order by timestamp) AS line_id,
+    UPPER(u.usuario)       as first_user,
+    UPPER(t.equipe)        as first_team
+    FROM chq
+    LEFT JOIN refined_homeservices_general.bluemetrics_total_users u ON u.id = chq.user_id AND u.brand = chq.brand
+    LEFT JOIN refined_homeservices_general.bluemetrics_total_teams t ON t.id = chq.team_id AND t.brand = chq.brand) 
+    where flg_first_att = 1),
+    
+   att_add as (
+    SELECT DISTINCT
+      add.attendance_id,
+      CASE WHEN 
+        add.name_field = "status_system_claro" 
+          THEN add.value 
+            ELSE NULL END AS status_system_claro,
+            add.brand
+    FROM refined_homeservices_general.phonemanager_attendances_add as add
+    WHERE EXISTS (SELECT id, brand FROM a WHERE a.id = add.attendance_id AND a.brand = add.brand))
+
+SELECT 
+/*+ MERGE(apc, dp, asrc, chq, u, t, c, st, q, qg, sty, ca, ec, op, p, pga, lin) */
+    DISTINCT 
+    a.id AS id_atendimento,
+    a.protocol as protocol, 
+    st.description AS tipo_cliente,
+    sty.description AS status_venda,
+    op.operadora AS operadora,
+    a.user_id AS id_usuario,
+    a.team_id AS id_equipe,
+    asrc.session_id_mkt AS session_id,
+    a.date_sale AS date_sale,
+    DATE_TRUNC('month', a.date_sale) AS mes,
+    DATE(a.date_sale) AS data,
+    HOUR(a.date_sale) AS hora,
+    q.fila AS fila,
+    CASE WHEN c.gender_id = 1 THEN 'Masculino' WHEN c.gender_id = 2 THEN 'Feminino' ELSE NULL END AS sexo,
+    CASE WHEN st.id = 4 OR st.id = 5 THEN c.name ELSE NULL END AS nome_razao,
+    CASE WHEN st.id = 4 OR st.id = 5 THEN c.identification ELSE NULL END AS cpf_cnpj,
+    CASE WHEN c.birth_date < '1900-01-01' THEN NULL ELSE c.birth_date END AS nascimento,
+    ec.estado_civil,
+    c.occupation AS profissao,
+    asrc.phone AS telefone,
+    c.email AS email,
+    ca.cep AS cep,
+    ca.state AS estado,
+    ca.city AS cidade,
+    p.product_id AS id_produto,
+    apc.v AS usuario_produto,
+    apc.pa  AS pacote,
+    apc.sp AS status,
+    CAST(replace(apc.f, '\r', '') AS STRING) AS dt_finalizacao,
+    CAST(apc.da AS STRING) AS dt_agendamento,
+    CAST(apc.dra AS STRING) AS dt_reagendamento,
+    CAST(apc.h AS STRING) AS dt_habilitacao,
+    CAST(apc.d AS STRING) AS dt_desistencia,
+    CAST(apc.e AS STRING) AS dt_estorno,
+    CAST(apc.dc AS STRING) AS dt_cancelamento,
+    CAST(apc.ds AS STRING) AS dt_san,
+    CAST(apc.dgo AS STRING) AS dt_order,
+    apc.pr AS proposta,
+    CAST(CAST(replace(replace(replace(replace(apc.co, ' ', ''), '-', ''), '.', ''), '/', '') AS long) AS string) AS contrato,
+    pga.me AS pagamento_mensalidade,
+    pga.ad AS pagamento_adesao,
+    CASE WHEN ISNULL(dp.value_name) THEN 0 ELSE dp.value_name END AS dependente,
+    apc.td AS tipo_domicilio,
+    chq_.line_id,
+    UPPER(u.usuario) AS usuario,
+    UPPER(t.equipe) AS equipe,
+    q.grupo AS grupo,
+    chq_.id AS calls_history_queue_id,
+    q.fila_filha AS queue_child,
+    UPPER(asrc.source_mkt) AS source,
+    UPPER(asrc.lead_source_mkt) AS lead_source,
+    UPPER(ghcte.pagina) AS pagina,
+    UPPER(asrc.medium_mkt) AS medium,
+    UPPER(ifnull(asrc.campaign_name_mkt,"SEM ATRIBUICAO")) AS campaign,
+    lin.number_0800 AS number_0800,
+    asrc.modality AS modality,
+    a.brand,
+        CASE WHEN chq_.queue IN (606, 605) AND 
+                  chq_.brand = 'claro' AND
+                  chq_.queue_log_modality_types_id = 102
+             THEN cs.verb_id
+             WHEN chq_.queue IN (603,612,680,690,691) AND 
+                  chq_.brand = 'pdp' AND
+                  chq_.queue_log_modality_types_id = 102
+             THEN cs.verb_id
+         ELSE NULL END                                   AS callback_sql_verb_types_id,
+         CASE WHEN chq_.queue IN (606, 605) AND 
+                  chq_.brand = 'claro' AND
+                  chq_.queue_log_modality_types_id = 102
+             THEN cs.description 
+             WHEN chq_.queue IN (603,612,680,690,691) AND 
+                  chq_.brand = 'pdp' AND
+                  chq_.queue_log_modality_types_id = 102
+             THEN cs.description 
+         ELSE NULL END                                    AS callback_sql_verb_types_name,
+    chq_.queue_log_verb_types_id AS queue_log_verb_types_id,
+    chr.ivr,
+    asrc.token,
+    chq_.token_group,
+     origem_venda,
+     st1.description AS att_description,
+     st2.description AS att_status,
+     st3.description AS att_type_non_sale_description,
+     t.periodo as shift,
+     a.created_at as att_created,
+     a.date_nonsale,
+     a.type_id,
+     apc.vp AS user_product,
+     apc.tp AS team_product,
+     ca.value_stream,
+     chq_.call_id,
+     oa.first_user,
+     oa.first_team,
+     CASE WHEN len(apc.oo) = 13 THEN "Legado" 
+          WHEN len(apc.oo) = 7 THEN "Nova Fibra" 
+          ELSE NULL END AS type_technology_cs,
+CASE WHEN (hubchat.session_init IS NOT NULL OR
+                UPPER(t.equipe) IN ( 'VM.WHATSAPP.COBMAX',
+                              'VM.WHATSAPP.OFICIAL',
+                              'VM8.WPP.OFICIAL.CLAUDIA',
+                              'VM8.WPP.PRÓPRIO.CLAUDIA',
+                              'VN.WHATSAPP.OFICIAL',
+                              'WHATSAPP.DIGITAL',
+                              'WHATSAPP.OI',
+                              'VENDAS.DIGITAIS')) and
+                               asrc.origem_venda like "%Whatsapp%"
+          THEN 'DIGITAL' 
+    WHEN UPPER(asrc.lead_source_mkt) LIKE '%CHECKOUT%' OR 
+         UPPER(asrc.lead_source_mkt) LIKE '%CHECKOUT_OFICIAL%' OR
+         UPPER(t.equipe) IN ( 'E-COMMERCE.OI',
+                              'E-COMMERCE',
+                              'ECommerce_Oficial_Oi',
+                              'CHECKOU.KELY',
+                              'CHECKOUT.OI',
+                              'CHECKOUT.REBECA',
+                              'Oi.Oficial.Checkout.Rebeca') THEN 'CART'
+    WHEN (UPPER(asrc.lead_source_mkt) NOT LIKE '%CHECKOUT%' AND 
+          UPPER(asrc.lead_source_mkt) NOT LIKE '%ESCALE_TESTE%') OR 
+          UPPER(asrc.lead_source_mkt) IS NULL AND
+         ((a.brand = 'pdp' AND ((LOWER(q.grupo) NOT LIKE '%oficial%' ) OR q.grupo is null)) OR a.brand = 'claro') AND 
+         (UPPER(apc.td ) NOT LIKE '%RENTABILIZACAO%' OR apc.td  IS NULL) AND
+         (asrc.origem_venda IN ('CDV', 'Claro - Whatsapp', 'Whatsapp')) AND
+         (UPPER(t.equipe) NOT IN ('EC.WHATSAPP.OFICIAL',
+                                  'VM.WHATSAPP.COBMAX',
+                                  'VM.WHATSAPP.OFICIAL',
+                                  'VM8.WPP.OFICIAL.CLAUDIA',
+                                  'VM8.WPP.PRÓPRIO.CLAUDIA',
+                                  'VN.WHATSAPP.OFICIAL',
+                                  'VM.MULTIMARCAS',
+                                  'VM1.MULTIMARCAS.THAIS',
+                                  'E-COMMERCE.OI',
+                                  'CHECKOUT.OI',
+                                  'CHECKOUT.KELY',
+                                  'CHECKOUT.REBECA',
+                                  'Oi.Oficial.Checkout.Rebeca',
+                                  'WHATSAPP.DIGITAL',
+                                  'WHATSAPP.OI',
+                                  'ECommerce_Oficial_Oi',
+                                  'E-COMMERCE',
+                                  'VENDAS.DIGITAIS') OR UPPER(t.equipe) IS NULL) THEN 'CDV'
+    ELSE NULL END AS class_venda,
+    apc.tt AS type_technology,
+    asrc.lead_id,
+    att_add.status_system_claro
+FROM a
+LEFT JOIN refined_homeservices_general.bluemetrics_total_users u ON u.id = a.user_id AND u.brand = a.brand
+LEFT JOIN refined_homeservices_general.bluemetrics_total_teams t ON t.id = a.team_id AND t.brand = a.brand
+LEFT JOIN refined_homeservices_general.phonemanager_customer c ON c.id = a.customer_id AND c.brand = a.brand
+LEFT JOIN refined_homeservices_general.phonemanager_system_types st ON st.id = c.customer_types_id AND st.brand = c.brand
+LEFT JOIN  asrc ON asrc.attendance_id = a.id AND (asrc.main_connection = 1 OR a.manual = 1) AND asrc.brand = a.brand
+LEFT JOIN(SELECT 
+               DISTINCT
+               session_init 
+          FROM hubchat ) hubchat ON  hubchat.session_init =  asrc.session_id_mkt      
+LEFT JOIN (
+    SELECT  
+          number_0800, 
+          brand,
+          max(id) AS line_id
+from refined_homeservices_general.phonemanager_lines 
+GROUP BY 1, 2) lin ON asrc.line_id = lin.line_id AND asrc.main_connection = 1 AND asrc.brand = a.brand
+LEFT JOIN chq ON asrc.token = chq.token AND chq.brand = asrc.brand
+LEFT JOIN chq_ ON asrc.token = chq_.token AND chq_.brand = asrc.brand
+LEFT JOIN order_agent as oa ON chq.call_id = oa.call_id AND chq.brand = oa.brand
+LEFT JOIN
+        callback_sql cs
+ON      cs.token = chq_.token_group
+AND     cs.brand  = chq_.brand
+LEFT JOIN
+        chr
+ON      chr.token_group = chq_.token_group
+AND     chr.brand  = chq_.brand
+LEFT JOIN queues q ON q.fila = chq_.queue AND q.brand = chq_.brand AND COALESCE(q.fila_filha,0) = COALESCE(chq_.queue_child,0)
+LEFT JOIN refined_homeservices_general.phonemanager_status_types sty ON sty.id = a.status_id AND sty.brand = a.brand
+LEFT JOIN (
+    SELECT ca.id,
+        ca.cep,
+        ca.city,
+        ca.state,
+        ca.customer_id,
+        t1.brand,
+        ca.value_stream
+    FROM (
+        SELECT
+            MAX(ca.id) AS id,
+            ca.customer_id,
+            ca.brand AS brand
+        FROM refined_homeservices_general.phonemanager_customer_address ca
+        WHERE ca.address_type_id = 11
+            AND length(ca.cep) > 0
+            AND ca.city_id IS NOT NULL
+        GROUP BY 2, 3
+    ) t1
+    INNER JOIN refined_homeservices_general.phonemanager_customer_address ca 
+    ON ca.id = t1.id 
+    AND ca.brand = t1.brand
+) ca ON ca.customer_id = c.id AND ca.brand = c.brand
+/*ESTADO CIVIL*/
+LEFT JOIN (
+    SELECT c.id,
+        CASE WHEN c.marital_state_id = 6 THEN 'Casada(o)'
+          WHEN c.marital_state_id = 7 THEN 'Divorciada(o)'
+          WHEN c.marital_state_id = 8 THEN 'Separada(o)'
+          WHEN c.marital_state_id = 9 THEN 'Solteira(o)'
+          WHEN c.marital_state_id = 10 THEN 'Viúva(o)'
+          ELSE NULL END
+        AS estado_civil,
+        c.brand
+    FROM refined_homeservices_general.phonemanager_customer c
+    WHERE c.marital_state_id BETWEEN 6 AND 10
+) ec ON ec.id = a.user_id AND ec.brand = a.brand
+/*OPERADORA*/
+LEFT JOIN (
+    SELECT ap.attendance_id, 
+    ap.brand, 
+    FIRST(st.description) AS operadora
+    FROM refined_homeservices_general.phonemanager_attendances_products ap
+    LEFT JOIN 
+           (SELECT brand, 
+                   id, 
+                   description, 
+                   reference
+            FROM   refined_homeservices_general.phonemanager_category 
+            WHERE  reference = 'product_category') st 
+    ON st.id        = ap.category_id 
+    AND st.brand    = ap.brand
+    WHERE (
+        EXISTS (SELECT 1 FROM attributes_cte atr
+            WHERE  atr.brand    = ap.brand
+            AND    atr.name     = ap.attribute_name
+            AND    atr.group    = 'tipo')
+    )
+    GROUP BY 1, 2
+) op ON op.attendance_id = a.id AND op.brand = a.brand
+/*PRODUTOS RELACIONADOS*/
+LEFT JOIN (
+    SELECT ap.attendance_id, 
+           ap.product_id, 
+           ap.brand
+    FROM refined_homeservices_general.phonemanager_attendances_products ap
+    WHERE (
+        EXISTS (SELECT 1 FROM attributes_cte atr
+            WHERE  atr.brand    = ap.brand
+            AND    atr.name     = ap.attribute_name
+            AND    atr.group    = 'tipo')
+    )
+    GROUP BY 1, 2, 3
+) p ON p.attendance_id = a.id AND p.brand = a.brand
+/*ATTENDANCES PRODUCTS E ATTRIBUTES CTE*/
+LEFT JOIN at_products_cte apc 
+ON apc.attendance_id = a.id 
+AND apc.product_id = p.product_id 
+AND apc.brand = a.brand
+/*PAGAMENTO ADESÃO E MENSALIDADE CTE*/
+LEFT JOIN pag_ades_e_mens_cte pga 
+ON pga.id = a.payment_monthly_id
+AND pga.brand = a.brand
+/*QUANTIDADE DE DEPENDENTES*/
+LEFT JOIN(
+    SELECT ap.attendance_id, 
+           ap.brand, 
+           FIRST(ap.product_id) AS product_id, 
+           COUNT(1) AS value_name
+    FROM refined_homeservices_general.phonemanager_attendances_products ap
+    WHERE ap.product_id = 4
+    AND   (EXISTS (SELECT 1 FROM attributes_cte atr
+            WHERE  atr.brand    = ap.brand
+            AND    atr.name     = ap.attribute_name
+            AND    atr.group    = 'qtd_dependentes'))
+    AND ap.number > 1
+    GROUP BY 1, 2
+) dp ON dp.attendance_id = a.id AND dp.product_id = p.product_id AND dp.brand = a.brand
+LEFT JOIN ghcte  ON chq_.growth_history_id = ghcte.id  AND chq_.brand = ghcte.brand
+LEFT JOIN refined_homeservices_general.phonemanager_status_types st1 ON a.type_id = st1.id AND a.brand = st1.brand
+LEFT JOIN refined_homeservices_general.phonemanager_status_types st2 ON a.status_id = st2.id 
+            AND a.brand = st2.brand 
+LEFT JOIN refined_homeservices_general.phonemanager_status_types st3 ON a.type_non_sale_id = st3.id AND a.brand = st3.brand
+LEFT JOIN att_add ON a.id = att_add.attendance_id AND a.brand = att_add.brand

@@ -47,3 +47,8 @@ sources:
       - name: phonemanager_growth_history
       - name: phonemanager_attendances
       - name: phonemanager_attendances_products
+      - name: phonemanager_payment
+      - name: phonemanager_system_types
+      - name: phonemanager_calls_history_queue
+      - name: phonemanager_calls_history_register
+      - name: phonemanager_telephony_types
