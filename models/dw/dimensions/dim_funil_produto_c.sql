@@ -1,8 +1,9 @@
 --02.01. [BV - FINANC] Funil Outbound Aut
 with cte_context as (
     SELECT
-        *         
-    FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }}
+        c.*  
+        ,f.desc_flowstep       
+    FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }} c
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
     left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
     where true
@@ -12,9 +13,11 @@ with cte_context as (
 , cte_calculated as (
 SELECT
     c.message_session_id
+    ,c.desc_flowstep
     ,c.timestamp
     ,1 AS conversas
     ,CASE WHEN welcome = 'true' THEN 1 ELSE 0 END interacao
+    ,CASE WHEN welcome = 'true' and individual_registration = 'true' THEN 1 ELSE 0 END identificacao
     ,CASE WHEN welcome = 'true' and product_deal_stage_description IS NOT NULL THEN 1 ELSE 0 END segmento_de_compra
     ,CASE WHEN welcome = 'true' and type_seller_description IS NOT NULL THEN 1 ELSE 0 END tipo_compra
     ,CASE WHEN welcome = 'true' and eligible_product IS NOT NULL THEN 1 ELSE 0 END pre_analise

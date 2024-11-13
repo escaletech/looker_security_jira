@@ -1,18 +1,19 @@
 --FINANCIMENTO BV
 with cte_context as (
     SELECT
-        *         
-    FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }}
+        c.*       
+        ,f.desc_flowstep  
+    FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }} c
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
     left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
     where true
         and welcome = 'true'
-        and token in ('Mxrh8nq6YggPHwBZ','quLecGCkR7Md6Xum','C3Dk8S2EbKCmtdqB','ngFvs23MiWem4jNi')
         and desc_flowstep = 'FINANCE - BV - FINANCIAMENTO'
 )
 , cte_calculated as (
 SELECT    
     c.message_session_id
+    ,c.desc_flowstep
     ,c.timestamp
     ,c.token
     ,1 as conversas
@@ -81,71 +82,7 @@ SELECT
 FROM cte_context c
     join {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_from') }} f on f.message_session_id = c.message_session_id
     --join {{ ref('stg_trusted_finance_general__hubchat_escale_finance_attendance') }} a on a.message_session_id = c.message_session_id
-where timestamp::Date between '2024-10-01' and '2024-10-31'
  )
 select
-    sum(conversas)
-    ,sum(identificacao)
-    --,sum(interacao)
-    ,sum(nao_quer_contato)
-    ,sum(deseja_prosseguir)
-    ,sum(nome)
-    ,sum(email)
-    ,sum(cpf)
-    ,sum(segmentacao_de_compra)
-    ,sum(tipo_de_veiculo)
-    ,sum(escolha_do_veiculo)
-    ,sum(negociando_veiculo)
-    ,sum(periodo_de_compra)
-    ,sum(pesquisando_onde_comprar)
-    ,sum(momento_da_compra)
-    ,sum(mais_rapido_possivel)
-    ,sum(melhor_opcao)
-    ,sum(refinanciamento)
-    ,sum(detalhamento_veiculo)
-    ,sum(marca)
-    ,sum(ano)
-    ,sum(versao_do_veiculo)
-    ,sum(km)
-    ,sum(valor_de_venda)
-    ,sum(data_de_nascimento)
-    ,sum(uf_licenciamento)
-    ,sum(confirmacao_do_veiculo)
-    ,sum(simulacao)
-    ,sum(descricao_da_entrada)
-    ,sum(api_pre_simulacao)
-    ,sum(api_simulacao)
-    ,sum(aprovado)
-    ,sum(reprovado)
-    ,sum(nao_foi_possivel_calcular)
-    ,sum(validacao_do_valor_de_entrada)
-    ,sum(entrada_minima)
-    ,sum(entrada_maior)
-    ,sum(entrada_abaixo_da_minima)
-    ,sum(proposta)
-    ,sum(resumo_da_proposta)
-    ,sum(dados_pessoais)
-    ,sum(estado_civil)
-    ,sum(nacionalidade)
-    ,sum(cidade_de_nascimento)
-    ,sum(estado_de_nascimento)
-    ,sum(nome_da_mae)
-    ,sum(rg)
-    ,sum(orgao_emissor_rg)
-    ,sum(estado_emissor_rg)
-    ,sum(data_de_emissao_rg)
-    ,sum(genero)
-    ,sum(ocupacao_e_renda)
-    ,sum(fonte_pagadora)
-    ,sum(tipo_profissional)
-    ,sum(numero_do_beneficio_inss)
-    ,sum(cnpj)
-    ,sum(cep_cnpj)
-    ,sum(nro_endereco_cnpj)
-    ,sum(tempo_de_ocupacao)
-    ,sum(renda_atual)
-    ,sum(endereco_e_tel_do_cliente)
-    ,sum(cep)
-    ,sum(nro_endereco)
-    --,sum(transbordo_atendente_final)
+    *
 from cte_calculated c

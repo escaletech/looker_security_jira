@@ -44,10 +44,10 @@ renamed as (
 )
 
 select --session_init, count(*)
-    session_init
+    session_init message_session_id
     ,user_id
     ,user_id as atendente_id
-    ,'' as client_id
+    ,'' client_id
     ,tabulation_internal_name
     ,user_email
     ,user_fullname

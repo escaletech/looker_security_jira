@@ -4,9 +4,9 @@ source as (
 
     select * from {{ source('trusted_finance_general', 'hubchat_escale_finance_messages') }}
 
-),
+)
 
-renamed as (
+,renamed as (
 
     select
         __v,
@@ -44,9 +44,9 @@ renamed as (
             WHEN response IS NOT NULL THEN response
             WHEN text IS NOT NULL THEN text 
         ELSE NULL 
-    END AS group_text,
-    case when (who = "user" OR who = "cron") then 1 else 0 end flag_paid_msg,
-    lag(timestamp) over(partition by session_init order by timestamp) lag_tsp_message
+        END AS group_text,
+        case when (who = "user" OR who = "cron") then 1 else 0 end flag_paid_msg
+        --lag(timestamp) over(partition by session_init order by timestamp) lag_tsp_message
     from source
 
 )
@@ -73,5 +73,5 @@ select
     ,'' AS desc_digital_campaing
     ,flag_paid_msg
     ,'' as hsm_template
-    ,timestampdiff(SECOND, lag_timestamp, timestamp)/60 vlr_tempo_resposta
+    --,timestampdiff(SECOND, lag_tsp_message, timestamp)/60 vlr_tempo_resposta
 from renamed
