@@ -3,9 +3,11 @@ with cte_context as (
     SELECT
         *         
     FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }}
+    left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
+    left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
     where true
         and type_contact = 'outbound'
-        and token = 'ngFvs23MiWem4jNi'
+        and desc_flowstep = 'FINANCE - BV - INBOUND/OUTBOUND AUTO'
 )
 , cte_calculated as (
 SELECT

@@ -3,8 +3,10 @@ with cte_context as (
     SELECT
         *    
     FROM {{ ref('stg_trusted_homeservices_general__hubchat_chat_messages_context') }}
+    left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
+    left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
     where true
-        and token in ('ScDVZX8g8Q3PbiPI', 'mSfULe6UnkxYBiQ3')
+        and desc_flowstep = 'HOMESERVICES- OI - VENDA'
 )
 ,cte_calculated as(
 SELECT

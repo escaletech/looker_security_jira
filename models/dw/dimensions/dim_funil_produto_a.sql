@@ -3,10 +3,12 @@
 
 with cte_context (
     SELECT
-        *
-    FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }}
+        c.*
+    FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }} c
+    left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
+    left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
     where welcome = 'true'
-    and token = 'C3Dk8S2EbKCmtdqB'
+        and desc_flowstep = 'FINANCE - ITAU - CONSIGNADO'
 
 )
 , cte_calculated as (

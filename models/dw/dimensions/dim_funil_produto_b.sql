@@ -1,12 +1,14 @@
 --[BV - FINANC] Funil Inbound Aut
 with cte_context (
     SELECT
-        *
-    FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }}
+        c.*
+    FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }} c
+    left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
+    left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
     where true
         --and welcome = 'true'
         and type_contact = 'inbound'
-        and token = 'ngFvs23MiWem4jNi'
+        and desc_flowstep = 'FINANCE - BV - INBOUND/OUTBOUND AUTO'
 )
 , cte_calculated as (
 SELECT
