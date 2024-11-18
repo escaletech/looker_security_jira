@@ -6,7 +6,7 @@ source as (
 
 )
 
-,renamed as (
+--,renamed as (
 
     select
         __v,

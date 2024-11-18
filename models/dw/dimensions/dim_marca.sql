@@ -12,5 +12,7 @@ with cte_marca_data AS(
     SELECT 5, 'QISTA'
     UNION ALL
     SELECT 6, 'REENERGISA'
+    UNION ALL
+    SELECT 7, 'RODOBENS'
 )
 select * from cte_marca_data

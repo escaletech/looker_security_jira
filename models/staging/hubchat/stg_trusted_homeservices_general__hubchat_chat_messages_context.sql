@@ -219,7 +219,7 @@ renamed as (
 select 
     session message_session_id
     ,timestamp
-    ,regexp_replace(numero_telefone, '[^0-9]', '') AS client_id
+    ,regexp_replace(numero_telefone, '[^0-9]', '') AS phone_number
     ,token
     ,welcome
     ,customer
@@ -236,4 +236,6 @@ select
     ,select_product
     ,product_description
     ,viability_product_description
+    ,element_name_hsm
+    ,history_hsm
 from renamed

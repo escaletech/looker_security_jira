@@ -10,7 +10,8 @@ SELECT
     
     -- Seleciona o primeiro `atendente_id` e `client_id` encontrados na sessão
     atendente_id,
-    client_id,
+    phone_number,
+    desc_primeiro_hsm,
     
     -- Seleciona a campanha e data, caso sejam constantes na sessão
     MIN(data_id) AS data_id,
@@ -26,9 +27,6 @@ SELECT
     COUNT(desc_message_source) filter(where desc_message_source = 'api') AS qtde_api_msg,
     COUNT(desc_message_source) filter(where desc_message_source = 'hubchat') AS qtde_hubchat_msg,
     COUNT(desc_message_source) filter(where desc_message_source = 'agent') AS qtde_agent_msg,
-    
-    -- Seleciona o template HSM e o tipo de resposta (se constantes na sessão)
-    count(hsm_template) filter(where hsm_template <> 'SEM CAMPANHA') AS hsm_template,
     
     -- Agrega as flags para indicar se qualquer uma das mensagens na sessão tem essas características
     SUM(flag_timeout) AS qtde_timeout,
