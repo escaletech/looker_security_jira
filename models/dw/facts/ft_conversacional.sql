@@ -14,7 +14,7 @@ with cte_join_tables as (
 )
 ,cte_metrics as (
     select 
-        hubchat_chat_messages_id --conversacional_id
+        hubchat_chat_messages_id as conversacional_id
         ,date_format(tsp_message,'yyyyMMdd') data_id
         ,vertical_id
         ,marca_id
