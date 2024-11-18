@@ -42,19 +42,19 @@ models:
     dw:
       +materialized: table
       catalog: hive_metastore
-      schema: "{% if target.name == 'default' %}{% else %}dw{% endif %}"
+      schema: "{% if target.name == 'databricks_cluster' %}dw{% else %}{% endif %}"
     
     intermediate:
       +materialized: table
       catalog: hive_metastore
-      schema: "{% if target.name == 'default' %}{% else %}dbt_production{% endif %}"
+      schema: "{% if target.name == 'databricks_cluster' %}dbt_production{% else %}{% endif %}"
     
     staging:
       +materialized: table
       catalog: hive_metastore
-      schema: "{% if target.name == 'default' %}{% else %}dbt_production{% endif %}" 
+      schema: "{% if target.name == 'databricks_cluster' %}dbt_production{% else %}{% endif %}" 
     
     trusted:
       +materialized: table
       catalog: hive_metastore
-      schema: "{% if target.name == 'default' %}{% else %}dbt_production{% endif %}"
+      schema: "{% if target.name == 'databricks_cluster' %}dbt_production{% else %}{% endif %}"
