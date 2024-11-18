@@ -4,9 +4,9 @@ source as (
 
     select * from {{ source('trusted_homeservices_general', 'hubchat_chat_workspace') }}
 
-),
+)
 
-renamed as (
+,renamed as (
 
     select
         __v,

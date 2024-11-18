@@ -2,7 +2,8 @@ with cte_join_tables as (
     select 
         mgs.* except(desc_digital_campaing,user_id)
         ,coalesce(ha.atendente_id,-1) as atendente_id
-        ,htx.client_id
+        ,htx.phone_number
+        ,htx.element_name_hsm as hsm
         ,coalesce(desc_digital_campaing,'SEM CAMPANHA') as digital_campaing_id
         ,coalesce(HC.valor_mgs,0) as valor_mgs
         ,ROW_NUMBER() OVER (PARTITION BY mgs.message_session_id ORDER BY tsp_message ASC) AS order_msg
@@ -14,24 +15,20 @@ with cte_join_tables as (
 ,cte_metrics as (
     select 
         hubchat_chat_messages_id --conversacional_id
+        ,date_format(tsp_message,'yyyyMMdd') data_id
         ,vertical_id
         ,marca_id
         ,produto_id
         ,flowstep_id
         ,message_session_id
         ,atendente_id
-        ,client_id
         ,digital_campaing_id
-        ,date_format(tsp_message,'yyyyMMdd') data_id
+        ,hsm
         ,tsp_message
+        ,phone_number
         ,desc_message_source
         ,desc_message_status
-        ,desc_message_text
-        ,response_type as desc_response_type
-        ,options as desc_text_options
-        ,wpp_body as desc_text_wpp_body
-        ,response as desc_text_response
-        ,hsm_template
+        ,case when order_msg = 1 then hsm else null end desc_primeiro_hsm
         ,flag_timeout
         ,flag_paid_msg
         ,flag_first_msg

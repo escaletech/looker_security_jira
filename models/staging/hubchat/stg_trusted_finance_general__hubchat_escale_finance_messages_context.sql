@@ -244,6 +244,7 @@ renamed as (
         payment_due_date,
         viability_product,
         viability_product_description,
+        whatsapp_template_history,
         CHARINDEX('{', _id) AS first_position,
         rank() over(partition by session order by timestamp desc) as last_session
 
@@ -254,7 +255,7 @@ renamed as (
 select 
     session message_session_id
     ,timestamp
-    ,regexp_replace(numero_telefone, '[^0-9]', '') AS client_id
+    ,regexp_replace(numero_telefone, '[^0-9]', '') AS phone_number
     ,token
     ,welcome
     ,opt_out
@@ -317,6 +318,8 @@ select
     ,purchase_situation_description
     ,occupation
     ,number_cnpj
+    ,case when element_name_hsm is null then whatsapp_template_name else element_name_hsm end element_name_hsm
+    ,case when history_hsm is null then whatsapp_template_history else history_hsm end as history_hsm 
 from renamed
 where true
     and first_position = 0 
