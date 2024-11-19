@@ -41,4 +41,4 @@ renamed as (
 
 )
 
-select session_id_mkt from renamed
+select session_id_mkt message_session_id from renamed

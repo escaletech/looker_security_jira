@@ -1418,4 +1418,14 @@ renamed as (
 
 )
 
-select properties_fgts_lead_id_itau from renamed
+select 
+    properties_fgts_lead_id_itau
+    ,properties_hubspot_session_init_hubchat
+    ,properties_consig_data_venda
+    ,properties_fgts_data_venda
+    ,case when properties_fgts_lead_id_itau is null then properties_hubspot_session_init_hubchat else properties_fgts_lead_id_itau end message_session_id
+    ,case 
+        when properties_fgts_lead_id_itau is not null then properties_fgts_data_venda
+        when properties_hubspot_session_init_hubchat is not null then properties_consig_data_venda
+        end dt_venda
+from renamed

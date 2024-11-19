@@ -36,6 +36,7 @@ with cte_join_tables as (
         ,flag_first_user_msg
         ,flag_first_agent_msg
         ,flag_last_bot_msg
+        ,flag_deal
         ,valor_mgs as vlr_custo_menssagem
         --,vlr_tempo_resposta
         ,order_msg as nr_order_msg
