@@ -1256,7 +1256,14 @@ renamed as (
         properties_conta_cartao_bairro
 
     from source
+    where archived is false
 
 )
 
-select properties_session_init_hubchat from renamed
+select 
+
+    properties_session_init_hubchat message_session_id
+    ,properties_finan_data_declinado
+    ,properties_finan_data_venda dt_venda
+
+from renamed

@@ -31,6 +31,7 @@ SELECT
     -- Agrega as flags para indicar se qualquer uma das mensagens na sessão tem essas características
     SUM(flag_timeout) AS qtde_timeout,
     SUM(flag_paid_msg) AS qtde_paid_msg,
+    SUM(flag_deal) AS qtde_paid_msg,
     
     -- Soma o custo total de mensagens na sessão
     SUM(vlr_custo_menssagem) AS vlr_custo_menssagem
