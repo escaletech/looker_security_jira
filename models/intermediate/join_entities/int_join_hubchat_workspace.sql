@@ -30,7 +30,7 @@ select
         WHEN token IN ( 'ScDVZX8g8Q3PbiPI', 'mSfULe6UnkxYBiQ3','MsDrMiwF4nhQH3Zm',
                         'PWWyzDv7PdpOxi4I','Q9Sosu4gqCZ6QWjH') THEN 'OI'
         WHEN token iN ('ePNrmsydThDAK5ij','4ebm9jE6Mtd0YSAR','CMXLEp8vqYcFMukB','d9dyQCuPQh7LD5qZ'
-                        ,'gahKeIbyKUCyo58Z', 'c6suHCuPQh7LD3qZ','sy192VUvwtdm3AIe','KPXwqncAzLJwng9R') THEN 'CLARO'
+                        ,'gahKeIbyKUCyo58Z', 'c6suHCuPQh7LD3qZ','sy192VUvwtdm3AIe','KPXwqncAzLJwng9R','iipRh6NiszHdSNsX') THEN 'CLARO'
         WHEN token iN ('rZu49vt9xCmGbHPK','RJR2Wt8rHXdJ2hD3') THEN 'RODOBENS'
     END AS brand,
     
