@@ -43,3 +43,6 @@ with cte_join_tables as (
     from cte_join_tables
 )
 select * from cte_metrics
+where 
+    vertical_id <> -1 
+    or vertical_id is not null
