@@ -31,7 +31,7 @@ SELECT
     -- Agrega as flags para indicar se qualquer uma das mensagens na sessão tem essas características
     SUM(flag_timeout) AS qtde_timeout,
     SUM(flag_paid_msg) AS qtde_paid_msg,
-    SUM(flag_deal) AS qtde_paid_msg,
+   --SUM(flag_deal) AS qtde_deals,
     
     -- Soma o custo total de mensagens na sessão
     SUM(vlr_custo_menssagem) AS vlr_custo_menssagem
@@ -41,4 +41,11 @@ FROM
 GROUP BY
     all
 )
-select * from cte_group
+, cte_join_deals as (
+    select 
+        g.*
+        ,d.* except(message_session_id) 
+    from cte_group g
+    left join {{ ref('int_join_session_msg_to_deal') }} d on d.message_session_id = g.message_session_id
+)
+select * from cte_join_deals
