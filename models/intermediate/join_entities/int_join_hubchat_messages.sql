@@ -5,7 +5,7 @@ with cte_join_msg as(
 )
 ,cte_join_ids as(
     select
-        cjm.* except(token)
+        cjm.* --except(token)
         ,w.* except(token)
         ,case when tsp_message = tsp_first_msg then 1 else 0 end flag_first_msg
         ,case when tsp_message = tsp_last_msg then 1 else 0 end flag_last_msg
@@ -15,8 +15,11 @@ with cte_join_msg as(
 from cte_join_msg cjm
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = cjm.token
 )
-select 
-    cte_join_ids.*
-    ,case when tsp_last_msg = tsp_message and std.message_session_id is not null then 1 else 0 end flag_deal
-from cte_join_ids
-left join {{ ref('int_join_session_msg_to_deal') }} std on std.message_session_id = cte_join_ids.message_session_id
+, cte_deal as(
+    select 
+        cte_join_ids.*
+        ,case when tsp_last_msg = tsp_message and std.message_session_id is not null then 1 else 0 end flag_deal
+    from cte_join_ids
+    left join {{ ref('int_join_session_msg_to_deal') }} std on std.message_session_id = cte_join_ids.message_session_id
+)
+select * from cte_deal

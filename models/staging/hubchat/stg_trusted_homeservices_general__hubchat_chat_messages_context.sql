@@ -219,7 +219,7 @@ renamed as (
 select 
     session message_session_id
     ,timestamp
-    ,regexp_replace(numero_telefone, '[^0-9]', '') AS phone_number
+    ,md5(sha(regexp_replace(numero_telefone, '[^0-9]', ''))) AS phone_number
     ,token
     ,welcome
     ,customer

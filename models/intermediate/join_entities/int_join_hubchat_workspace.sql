@@ -84,3 +84,4 @@ left join {{ ref('dim_flowstep') }} df on df.desc_flowstep = cft.flowstep
 ORDER BY 6
 )
 select * from cte_main
+--token = 'QW4W85h2R969KnbA' não existe no workspace, porém existe na messages

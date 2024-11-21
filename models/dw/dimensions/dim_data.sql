@@ -87,6 +87,7 @@ with
         select 
             data_id
             , data_dia
+            , date_format(data_dia,'yyyy-MM-01')  dt_mes
             , dia_da_semana
             , nome_do_dia
             , mes
