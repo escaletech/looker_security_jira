@@ -50,11 +50,6 @@ models:
       schema: "{% if target.name == 'databricks_cluster' %}dbt_production{% else %}{% endif %}"
     
     staging:
-      +materialized: table
+      +materialized: view
       catalog: hive_metastore
       schema: "{% if target.name == 'databricks_cluster' %}dbt_production{% else %}{% endif %}" 
-    
-    trusted:
-      +materialized: table
-      catalog: hive_metastore
-      schema: "{% if target.name == 'databricks_cluster' %}dbt_production{% else %}{% endif %}"

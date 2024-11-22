@@ -28,12 +28,11 @@ select
                         'mJhH9aUL15gN4t4Y', 'MUa6hKcWL7WgJY6T', 'GObxGIG8arJIaWHI') THEN 'ITAU'
         WHEN token IN ('5ZQmrzqIg6qCHtve','tG4xcFPdTPRF8dLQ','egLLr0RNOFH4vA2w','Qwzep4lP1XuennMX') THEN 'REENERGISA'
         WHEN token IN ( 'ScDVZX8g8Q3PbiPI', 'mSfULe6UnkxYBiQ3','MsDrMiwF4nhQH3Zm',
-                        'PWWyzDv7PdpOxi4I','Q9Sosu4gqCZ6QWjH') THEN 'OI'
-        WHEN token iN ('ePNrmsydThDAK5ij','4ebm9jE6Mtd0YSAR','CMXLEp8vqYcFMukB','d9dyQCuPQh7LD5qZ'
-                        ,'gahKeIbyKUCyo58Z', 'c6suHCuPQh7LD3qZ','sy192VUvwtdm3AIe','KPXwqncAzLJwng9R','iipRh6NiszHdSNsX') THEN 'CLARO'
+                        'PWWyzDv7PdpOxi4I','Q9Sosu4gqCZ6QWjH','4yoRCujZlY0KCFRV','iipRh6NiszHdSNsX','tlp034CFLTggvdAZ','d9dyQCuPQh7LD5qZ') THEN 'OI'
+        WHEN token iN ('ePNrmsydThDAK5ij','4ebm9jE6Mtd0YSAR','CMXLEp8vqYcFMukB'
+                        ,'gahKeIbyKUCyo58Z', 'c6suHCuPQh7LD3qZ','sy192VUvwtdm3AIe','KPXwqncAzLJwng9R') THEN 'CLARO'
         WHEN token iN ('rZu49vt9xCmGbHPK','RJR2Wt8rHXdJ2hD3') THEN 'RODOBENS'
     END AS brand,
-    
     CASE
         WHEN token IN ('ngFvs23MiWem4jNi') THEN 'FINANCIAMENTO AUTO'
         WHEN token IN ('Z7Dng45tpO41Zglw','QhDLpaXyJw6Ld79j', 'fFfEZyM6bGvVr4vq', 'Ky19Pz6dWUywP5ZM',
@@ -43,8 +42,13 @@ select
         WHEN token = 'ITe3BFuPMWUvh2Sd' THEN 'FINANCIAMENTO'
         WHEN token = 'MUa6hKcWL7WgJY6T' THEN 'CONSORCIO'
         WHEN token IN ('nzZfNjWOoZRiO7RR', '6pLRW38NZeb2X4cp', 'VuShVz4wngVmQvdo') THEN 'EGV'
-        WHEN token IN ('5ZQmrzqIg6qCHtve') THEN 'ASSINATURA ENERGIA'
-        WHEN token IN ('ScDVZX8g8Q3PbiPI', 'mSfULe6UnkxYBiQ3', 'ePNrmsydThDAK5ij') THEN 'NAO INFORMADO'
+        WHEN token IN ('5ZQmrzqIg6qCHtve','Qwzep4lP1XuennMX') THEN 'ASSINATURA ENERGIA'
+        WHEN token IN ('ePNrmsydThDAK5ij','4ebm9jE6Mtd0YSAR','CMXLEp8vqYcFMukB','d9dyQCuPQh7LD5qZ'
+                        ,'gahKeIbyKUCyo58Z','c6suHCuPQh7LD3qZ','sy192VUvwtdm3AIe','KPXwqncAzLJwng9R'
+                        ,'ScDVZX8g8Q3PbiPI', 'mSfULe6UnkxYBiQ3'
+                        ,'PWWyzDv7PdpOxi4I') THEN 'INTERNET, TV, TELEFONE E MOVEL'
+        WHEN token IN ('iipRh6NiszHdSNsX','tlp034CFLTggvdAZ','Q9Sosu4gqCZ6QWjH','d9dyQCuPQh7LD5qZ'
+                       '4yoRCujZlY0KCFRV','MsDrMiwF4nhQH3Zm','4yoRCujZlY0KCFRV') THEN 'INTERNET'
         END AS product,
     CASE
         WHEN token in ('C3Dk8S2EbKCmtdqB') then 'FINANCE - ITAU - CONSIGNADO'
@@ -52,7 +56,6 @@ select
         WHEN token in ('ScDVZX8g8Q3PbiPI', 'mSfULe6UnkxYBiQ3') then 'HOMESERVICES- OI - VENDA'
         WHEN token in ('fFfEZyM6bGvVr4vq') then 'FINANCE - ITAU - FGTS'
         WHEN token in ('Mxrh8nq6YggPHwBZ','quLecGCkR7Md6Xum','C3Dk8S2EbKCmtdqB','ngFvs23MiWem4jNi') then 'FINANCE - BV - FINANCIAMENTO'
-        ELSE 'NAO INFORMADO'
         end flowstep
     ,token
     ,assistant_name
