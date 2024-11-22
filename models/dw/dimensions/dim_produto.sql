@@ -18,5 +18,9 @@ with cte_produto_data AS(
     SELECT 9, 'FINANCIAMENTO AUTO'
     UNION ALL
     SELECT 10, 'CONSORCIO'
+    UNION ALL
+    SELECT 11, 'INTERNET, TV, TELEFONE E MOVEL'
+    UNION ALL
+    SELECT 12, 'INTERNET'
 )
 select * from cte_produto_data
