@@ -31,11 +31,11 @@ source as (
         wpp_body,
         user_id,
         CASE 
+            WHEN text IS NOT NULL THEN text 
             WHEN options IS NOT NULL THEN options
             WHEN wpp_body IS NOT NULL THEN wpp_body
             WHEN response IS NOT NULL THEN response
-            WHEN text IS NOT NULL THEN text 
-        ELSE NULL 
+        ELSE NULL
         END AS group_text,
         case when (who = 'user' OR who = 'cron') then 1 else 0 end flag_paid_msg
         --lag(timestamp) over(partition by session_init order by timestamp) lag_tsp_message
@@ -52,11 +52,12 @@ select
     ,timestamp tsp_message
     ,desc_message_source
     ,status desc_message_status
-    ,text desc_message_text
     ,response_type 
+    ,text desc_message_text
     ,options
     ,wpp_body
     ,response
+    ,group_text
     ,min(timestamp) over(partition by session_init order by timestamp) as tsp_first_msg
     ,min(timestamp) over(partition by session_init, desc_message_source = 'user' order by timestamp) as tsp_first_user_msg
     ,min(timestamp) over(partition by session_init, user_id is not null order by timestamp) as tsp_first_agent_msg
