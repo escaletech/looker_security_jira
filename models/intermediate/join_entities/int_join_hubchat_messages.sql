@@ -20,6 +20,6 @@ from cte_join_msg cjm
         cte_join_ids.*
         ,case when tsp_last_msg = tsp_message and std.message_session_id is not null then 1 else 0 end flag_deal
     from cte_join_ids
-    left join {{ ref('int_join_session_msg_to_deal') }} std on std.message_session_id = cte_join_ids.message_session_id
+    left join {{ ref('int_join_hubspot_session_msg_to_deal') }} std on std.message_session_id = cte_join_ids.message_session_id
 )
 select * from cte_deal
