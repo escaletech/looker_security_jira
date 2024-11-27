@@ -41,11 +41,20 @@ FROM
 GROUP BY
     all
 )
+,cte_hsm as(
+    select
+        message_session_id
+        ,count(hsm) qtde_hsm
+    from {{ ref('ft_hsm_history') }}
+    group by 1
+)
 , cte_join_deals as (
     select 
         g.*
-        ,d.* except(message_session_id) 
+        ,d.* except(message_session_id)
+        ,coalesce(hsm.qtde_hsm,0) as qtde_hsm
     from cte_group g
     left join {{ ref('int_join_session_msg_to_deal') }} d on d.message_session_id = g.message_session_id
+    left join cte_hsm hsm on hsm.message_session_id = g.message_session_id
 )
 select * from cte_join_deals

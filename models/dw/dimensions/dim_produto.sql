@@ -1,5 +1,7 @@
 with cte_produto_data AS(
-    SELECT -1 produto_id, 'NAO INFORMADO' AS produto
+    SELECT -2 produto_id, 'TESTE' AS produto
+    UNION ALL
+    SELECT -1 , 'NAO INFORMADO'
     UNION ALL
     SELECT 1, 'ASSINATURA ENERGIA'
     UNION ALL

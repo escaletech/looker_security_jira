@@ -1,3 +1,4 @@
+with cte_int as (
 select 
     message_session_id
     ,date_format(tsp_send_hsm,'yyyyMMdd') data_id
@@ -8,5 +9,5 @@ select
     ,hsm
     ,tsp_send_hsm
 from {{ ref('int_hubchat_hsm_history') }}
-where hsm is not null
-
+)
+select * from cte_int
