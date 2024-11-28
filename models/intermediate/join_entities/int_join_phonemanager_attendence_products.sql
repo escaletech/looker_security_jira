@@ -3,4 +3,4 @@ with cte_join as(
     union all
     select 'claro' source, * from {{ ref('stg_trusted_homeservices_claro__phonemanager_attendances_products') }}
 )
-select * from cte_join 
+select * from cte_join
