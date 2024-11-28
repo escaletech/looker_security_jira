@@ -11,7 +11,7 @@ SELECT
     -- Seleciona o primeiro `atendente_id` e `client_id` encontrados na sessão
     atendente_id,
     phone_number,
-    desc_primeiro_hsm,
+    max(desc_primeiro_hsm) desc_primeiro_hsm,
     
     -- Seleciona a campanha e data, caso sejam constantes na sessão
     MIN(data_id) AS data_id,
@@ -22,7 +22,7 @@ SELECT
     MAX(tsp_message) AS tsp_last_message,
     
     -- Seleciona a última fonte e status da mensagem da sessão
-    max(nr_order_msg) AS nr_order_msg,
+    COUNT(conversacional_id) AS nr_order_msg,
     COUNT(desc_message_source) filter(where desc_message_source = 'user') AS qtde_user_msg,
     COUNT(desc_message_source) filter(where desc_message_source = 'api') AS qtde_api_msg,
     COUNT(desc_message_source) filter(where desc_message_source = 'hubchat') AS qtde_hubchat_msg,
@@ -57,4 +57,6 @@ GROUP BY
     left join {{ ref('int_join_hubspot_session_msg_to_deal') }} d on d.message_session_id = g.message_session_id
     left join cte_hsm hsm on hsm.message_session_id = g.message_session_id
 )
-select * from cte_join_deals
+select message_session_id, count(*) from {{ ref('int_join_hubspot_session_msg_to_deal') }}
+group by 1
+order by 2 desc

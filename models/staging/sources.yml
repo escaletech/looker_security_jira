@@ -71,6 +71,8 @@ sources:
     tables:
       - name: phonemanager_attendances_source
       - name: phonemanager_attendances_products
+      - name: phonemanager_status_types
+      - name: phonemanager_attendances
 
   - name: trusted_homeservices_pdp
     catalog: hive_metastore
@@ -78,3 +80,5 @@ sources:
     tables:
       - name: phonemanager_attendances_source
       - name: phonemanager_attendances_products
+      - name: phonemanager_status_types
+      - name: phonemanager_attendances

@@ -34,5 +34,6 @@ renamed as (
 select 
     attendance_id 
     ,group_attribute
+    ,value_name
 from renamed
 
