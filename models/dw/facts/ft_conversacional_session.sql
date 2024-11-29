@@ -57,6 +57,4 @@ GROUP BY
     left join {{ ref('int_join_hubspot_session_msg_to_deal') }} d on d.message_session_id = g.message_session_id
     left join cte_hsm hsm on hsm.message_session_id = g.message_session_id
 )
-select message_session_id, count(*) from {{ ref('int_join_hubspot_session_msg_to_deal') }}
-group by 1
-order by 2 desc
+select * from cte_join_deals
