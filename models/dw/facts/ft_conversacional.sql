@@ -29,6 +29,9 @@ with cte_join_tables as (
         ,desc_message_source
         ,desc_message_status
         ,case when order_msg = 1 then hsm else null end desc_primeiro_hsm
+        ,flag_enviado
+        ,flag_entregue
+        ,flag_lido
         ,flag_timeout
         ,flag_paid_msg
         ,flag_first_msg
