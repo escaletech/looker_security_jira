@@ -18,8 +18,16 @@ from cte_join_msg cjm
 , cte_deal as(
     select 
         cte_join_ids.*
+        ,case when desc_message_source = 'agent' and lag(flag_timeout) over(partition by cte_join_ids.message_session_id order by tsp_message) = 1 then 1 else 0 end flag_transbordo
         ,case when tsp_last_msg = tsp_message and std.message_session_id is not null then 1 else 0 end flag_deal
     from cte_join_ids
     left join {{ ref('int_join_hubspot_session_msg_to_deal') }} std on std.message_session_id = cte_join_ids.message_session_id
 )
-select * from cte_deal
+, cte_reponse_status as(
+    select 
+        cte_deal.*
+        ,mrs.* except(hubchat_chat_messages_id)
+    from cte_deal
+    left join {{ ref('int_join_hubchat_messages_responde_status') }} mrs on mrs.hubchat_chat_messages_id = cte_deal.hubchat_chat_messages_id
+)
+select * from cte_reponse_status

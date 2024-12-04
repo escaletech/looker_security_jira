@@ -74,5 +74,6 @@ select
     ,'' AS desc_digital_campaing
     ,flag_paid_msg
     ,'' as hsm_template
+    ,message_statuses_new desc_status_menssagem
     --,timestampdiff(SECOND, lag_tsp_message, timestamp)/60 vlr_tempo_resposta
 from renamed
