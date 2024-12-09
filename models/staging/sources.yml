@@ -82,3 +82,9 @@ sources:
       - name: phonemanager_attendances_products
       - name: phonemanager_status_types
       - name: phonemanager_attendances
+  
+  - name: trusted_cross_general
+    catalog: hive_metastore
+    schema: trusted_cross_general
+    tables:
+      - name: typebot_general

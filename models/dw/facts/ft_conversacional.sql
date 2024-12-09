@@ -16,6 +16,7 @@ with cte_join_tables as (
     select 
         hubchat_chat_messages_id as conversacional_id
         ,date_format(tsp_message,'yyyyMMdd') data_id
+        ,hour_id hora_id
         ,vertical_id
         ,marca_id
         ,produto_id
@@ -25,6 +26,9 @@ with cte_join_tables as (
         ,digital_campaing_id
         ,hsm
         ,tsp_message
+        ,tsp_enviado
+        ,tsp_entregue
+        ,tsp_lido
         ,phone_number
         ,desc_message_source
         ,desc_message_status
@@ -33,6 +37,7 @@ with cte_join_tables as (
         ,flag_entregue
         ,flag_lido
         ,flag_timeout
+        ,flag_transbordo
         ,flag_paid_msg
         ,flag_first_msg
         ,flag_last_msg
@@ -40,6 +45,7 @@ with cte_join_tables as (
         ,flag_first_agent_msg
         ,flag_last_bot_msg
         ,flag_deal
+        ,flag_abandono
         ,valor_mgs as vlr_custo_menssagem
         --,vlr_tempo_resposta
         ,order_msg as nr_order_msg
