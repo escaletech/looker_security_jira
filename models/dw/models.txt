@@ -1,9 +1,9 @@
 version: 2
 
 models:
-  - name: orders
+  - name: dim_data
     columns:
-      - name: order_id
+      - name: data_id
         tests:
           - unique
           - not_null

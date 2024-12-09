@@ -37,7 +37,10 @@ source as (
             WHEN response IS NOT NULL THEN response
         ELSE NULL
         END AS group_text,
-        case when (who = 'user' OR who = 'cron') then 1 else 0 end flag_paid_msg
+        case when (who = 'user' OR who = 'cron') then 1 else 0 end flag_paid_msg,
+        from_json(REPLACE(REPLACE(REPLACE(status, ',', '","'),'[','["'),']','"]'), 'ARRAY<STRING>') AS cleaned_status,
+        --from_json(status_timestamp, 'ARRAY<INT>') AS cleaned_status_timestamp
+        IF(from_json(status_timestamp, 'ARRAY<INT>') IS NULL, array_repeat(NULL, size(cleaned_status)), from_json(status_timestamp, 'ARRAY<INT>')) as cleaned_status_timestamp
         --lag(timestamp) over(partition by session_init order by timestamp) lag_tsp_message
 
     from source
@@ -73,6 +76,5 @@ select
         END AS desc_digital_campaing
     ,flag_paid_msg
     ,template_name hsm_template
-    ,status desc_status_menssagem
-    --,timestampdiff(SECOND, lag_tsp_message, timestamp)/60 vlr_tempo_resposta
+    ,transform(arrays_zip(cleaned_status, cleaned_status_timestamp),x -> struct(x.cleaned_status AS tipo, CAST(x.cleaned_status_timestamp AS int) AS timestamp)) AS desc_status_menssagem
  from renamed
