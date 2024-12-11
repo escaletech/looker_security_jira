@@ -19,13 +19,15 @@ with cte_valid_types as(
     where group_attribute = 'finalizacao' and value_name <> ''
 )
 , cte_join_products_source as (
-    select 
+    select
         message_session_id
+        ,s.attendance_id 
         ,1 qtde_deals_total
         ,coalesce(qtde_deals_aprovado,0) qtde_deals_aprovado
         ,case when qtde_deals_aprovado = 1 then 0 else 1 end qtde_deals_declinado
     from {{ ref('int_join_phonemanager_attendence_source') }} s
     left join cte_phonemanager_group pg on pg.attendance_id = s.attendance_id and pg.source = s.source
+    join cte_valid_types vt on vt.attendance_id = s.attendance_id and vt.source = s.source
     where message_session_id is not null
 )
 select 
