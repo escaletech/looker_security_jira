@@ -52,4 +52,5 @@ renamed as (
 select 
     id attendance_id
     ,status_id
+    ,type_id
 from renamed

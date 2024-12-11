@@ -87,4 +87,6 @@ sources:
     catalog: hive_metastore
     schema: trusted_cross_general
     tables:
-      - name: typebot_general
+      - name: typebot_message
+      - name: typebot_session
+      - name: typebot_agent

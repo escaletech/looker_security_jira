@@ -1,10 +1,13 @@
 with cte_valid_types as(
-    select 
-        a.source 
-        ,a.attendance_id 
-    from {{ ref('int_join_phonemanager_attendence') }} a
-    left join {{ ref('int_join_phonemanager_attendence_status_type') }}  st on st.status_id = a.status_id and st.source = a.source 
-    where desc_status_attendance not in ('CANCELADA','VENDA DUPLICADA','TESTE VENDA','VENDA TESTE','DUPLICIDADE DE PEDIDO','DUPLICIDADE DE CPF')
+        select 
+            a.source 
+            ,a.attendance_id
+        from {{ ref('int_join_phonemanager_attendence') }} a
+    left join {{ ref('int_join_phonemanager_attendence_status_type') }}  st on st.status_id = a.status_id and st.source = a.source
+    --left join {{ ref('int_join_phonemanager_attendence_status_type') }}  st2 on st2.status_id = a.type_id and st2.source = a.source
+    where true
+        and st.desc_status_attendance not in ('CANCELADA','VENDA DUPLICADA','TESTE VENDA','VENDA TESTE','DUPLICIDADE DE PEDIDO','DUPLICIDADE DE CPF')
+        and a.type_id = 1 -- ajustar para a venda
 )
 ,cte_phonemanager_group as (
     select distinct
