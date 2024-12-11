@@ -1,0 +1,1 @@
+select * from {{ ref('stg_trusted_cross_general__typebot_message') }}

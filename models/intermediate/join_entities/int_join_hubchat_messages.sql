@@ -33,3 +33,4 @@ from cte_join_msg cjm
     left join {{ ref('int_join_hubchat_messages_responde_status') }} mrs on mrs.hubchat_chat_messages_id = cte_deal.hubchat_chat_messages_id
 )
 select * from cte_reponse_status
+

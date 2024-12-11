@@ -2,7 +2,7 @@ with
 
 source as (
 
-    select * from {{ source('trusted_cross_general', 'typebot_general') }}
+    select * from {{ source('trusted_cross_general', 'typebot_message') }}
 
 ),
 
@@ -70,10 +70,21 @@ renamed as (
 
 select 
     message_id
-    ,metadata_message_conversation
+    ,session_id
     ,metadata_session_bot_id
-    ,metadata_session_id
     ,metadata_participant
     ,metadata_session_created_at
-    ,metadata_session_parameters_instance_name
+    ,metadata_session_parameters_instance_name hsm
+    ,status
+    ,text desc_message_text
+    ,who desc_message_source
  from renamed
+
+
+  /*  ,token
+    ,user_id
+    ,timestamp tsp_message
+    ,response_response_type as response_type
+    ,text desc_message_text
+    ,case when response_type = 'cron' then 1 else 0 end flag_timeout
+    */
