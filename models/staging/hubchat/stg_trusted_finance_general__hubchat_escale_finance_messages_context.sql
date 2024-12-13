@@ -258,6 +258,7 @@ select
     ,md5(sha(regexp_replace(numero_telefone, '[^0-9]', ''))) AS phone_number
     ,token
     ,welcome
+    ,opt_in
     ,opt_out
     ,unlock_inss
     ,product_description
