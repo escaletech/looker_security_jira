@@ -51,4 +51,15 @@ renamed as (
 
 )
 
-select * from renamed
+select
+    session_id message_session_id
+    ,created_at
+    ,closed_at
+    ,partner
+    ,metadata_push_name
+    ,remote_jid
+    ,status
+    ,who as phone_number
+    ,metadata_await_user
+    ,await_user
+ from renamed
