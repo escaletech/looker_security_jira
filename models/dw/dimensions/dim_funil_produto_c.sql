@@ -8,7 +8,7 @@ with cte_context as (
     left join {{ ref('dim_agente_bot') }} f on f.agente_bot_id = w.agente_bot_id
     where true
         and type_contact = 'outbound'
-        and desc_flowstep = 'FINANCE - BV - INBOUND/OUTBOUND AUTO'
+        and desc_agente_bot = 'FINANCE - BV - INBOUND/OUTBOUND AUTO'
 )
 , cte_calculated as (
 SELECT

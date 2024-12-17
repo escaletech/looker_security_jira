@@ -9,7 +9,7 @@ with cte_context (
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
     left join {{ ref('dim_agente_bot') }} f on f.agente_bot_id = w.agente_bot_id
     where welcome = 'true'
-        and desc_flowstep = 'FINANCE - ITAU - CONSIGNADO'
+        and desc_agente_bot = 'FINANCE - ITAU - CONSIGNADO'
 
 )
 , cte_calculated as (

@@ -24,8 +24,8 @@ SELECT
     MAX(tsp_message) AS tsp_last_message,
     
     --flags
-    MAX(flag_inbound) AS flag_inbound
-    MAX(flag_outbound) AS flag_outbound 
+    MAX(flag_inbound) AS flag_inbound,
+    MAX(flag_outbound) AS flag_outbound,
     sum(flag_abandono) flag_abandonou_chat,
     MAX(case when desc_message_source = 'user' then 1 else 0 end) AS flag_msg_usuario,
     MAX(case when desc_message_source = 'api' then 1 else 0 end) AS flag_msg_api,

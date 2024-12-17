@@ -9,7 +9,7 @@ with cte_context (
     where true
         --and welcome = 'true'
         and type_contact = 'inbound'
-        and desc_flowstep = 'FINANCE - BV - INBOUND/OUTBOUND AUTO'
+        and desc_agente_bot = 'FINANCE - BV - INBOUND/OUTBOUND AUTO'
 )
 , cte_calculated as (
 SELECT

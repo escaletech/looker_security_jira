@@ -7,7 +7,7 @@ with cte_context as (
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
     left join {{ ref('dim_agente_bot') }} f on f.agente_bot_id = w.agente_bot_id
     where true
-        and desc_flowstep = 'HOMESERVICES- OI - VENDA'
+        and desc_agente_bot = 'HOMESERVICES- OI - VENDA'
 )
 ,cte_calculated as(
 SELECT
