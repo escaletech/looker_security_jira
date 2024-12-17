@@ -15,6 +15,14 @@ with cte_join_msg as(
 from cte_join_msg cjm
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = cjm.token
 )
+,cte_inbound_outbound as(
+    select
+        message_session_id
+        ,case when desc_message_source = 'user' then 1 else 0 end flag_inbound
+        ,case when desc_message_source != 'user' then 1 else 0 end flag_outbound
+    from cte_join_msg
+    where order_msg = 1
+)
 , cte_deal as(
     select 
         cte_join_ids.*
@@ -29,8 +37,10 @@ from cte_join_msg cjm
     select 
         cte_deal.*
         ,mrs.* except(hubchat_chat_messages_id)
+        ,cio.* except(message_session_id)
     from cte_deal
     left join {{ ref('int_join_hubchat_messages_responde_status') }} mrs on mrs.hubchat_chat_messages_id = cte_deal.hubchat_chat_messages_id
+    left join cte_inbound_outbound cio on cio.message_session_id = cte_deal.message_session_id
 )
 select * from cte_reponse_status
 

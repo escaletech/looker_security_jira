@@ -70,10 +70,11 @@ select
     ,min(timestamp) over(partition by session_init, user_id is not null order by timestamp) as tsp_first_agent_msg
     ,max(timestamp) over(partition by session_init, who = 'hubchat', user_id is null order by timestamp) as tsp_last_bot_msg
     ,max(timestamp) over(partition by session_init order by timestamp desc) as tsp_last_msg
+    ,ROW_NUMBER() OVER (PARTITION BY session_init ORDER BY timestamp ASC) AS order_msg
     ,case when response_type = 'cron' then 1 else 0 end flag_timeout
-    ,'' AS desc_digital_campaing
+    ,null AS desc_digital_campaing
     ,flag_paid_msg
-    ,'' as hsm_template
+    ,null as hsm_template
     --,message_statuses_new desc_status_menssagem
     ,SPLIT(SUBSTRING(message_statuses_new, 2, LENGTH(message_statuses_new) - 2), '},') desc_status_menssagem
     --,timestampdiff(SECOND, lag_tsp_message, timestamp)/60 vlr_tempo_resposta

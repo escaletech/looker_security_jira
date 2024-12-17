@@ -6,7 +6,6 @@ with cte_join_tables as (
         ,htx.element_name_hsm as hsm
         ,coalesce(desc_digital_campaing,'SEM CAMPANHA') as digital_campaing_id
         ,coalesce(HC.valor_mgs,0) as valor_mgs
-        ,ROW_NUMBER() OVER (PARTITION BY mgs.message_session_id ORDER BY tsp_message ASC) AS order_msg
     from {{ ref('int_join_hubchat_messages') }} mgs
     left join {{ ref('int_hubspot_cost') }} HC ON  HC.dt_cost = DATE_TRUNC('MONTH',mgs.tsp_message) and (mgs.flag_paid_msg = 1)
     left join {{ ref('int_join_hubchat_context') }} htx on htx.message_session_id = mgs.message_session_id
@@ -20,7 +19,7 @@ with cte_join_tables as (
         ,vertical_id
         ,marca_id
         ,produto_id
-        ,flowstep_id
+        ,agente_bot_id
         ,message_session_id
         ,atendente_id
         ,digital_campaing_id
@@ -33,6 +32,8 @@ with cte_join_tables as (
         ,desc_message_source
         ,desc_message_status
         ,case when order_msg = 1 then hsm else null end desc_primeiro_hsm
+        ,flag_inbound
+        ,flag_outbound
         ,flag_enviado
         ,flag_entregue
         ,flag_lido
@@ -47,7 +48,6 @@ with cte_join_tables as (
         ,flag_deal
         ,flag_abandono
         ,valor_mgs as vlr_custo_menssagem
-        --,vlr_tempo_resposta
         ,order_msg as nr_order_msg
     from cte_join_tables
 )
