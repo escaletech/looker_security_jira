@@ -82,7 +82,7 @@ select
         when token in ('kjSm43lPDG29jD0D') then 'POC voice OI'
         when token in ('sy192VUvwtdm3AIe') then 'Claro Dealers (11) 98891-3555'
         when token in ('tlp034CFLTggvdAZ') then 'Portal de Planos (11) 98891-5022'
-    end flowstep
+    end desc_agente_bot
     ,token
     ,assistant_name
 from cte_join
@@ -92,7 +92,7 @@ select
     coalesce(vertical,'NAO INFORMADO') AS vertical
     ,coalesce(brand,'NAO INFORMADO') AS brand
     ,coalesce(product,'NAO INFORMADO') AS product
-    ,coalesce(flowstep,'NAO INFORMADO') AS flowstep
+    ,coalesce(desc_agente_bot,'NAO INFORMADO') AS desc_agente_bot
     ,token
     ,assistant_name
 FROM cte_token_identification
@@ -103,13 +103,13 @@ SELECT
     ,dv.vertical_id
     ,dm.marca_id
     ,dp.produto_id
-    ,df.flowstep_id
+    ,df.agente_bot_id
     ,assistant_name
 FROM CTE_FILL_TABLE cft
 left join {{ ref('dim_vertical') }} dv on dv.vertical = cft.vertical
 left join {{ ref('dim_marca') }} dm on dm.marca = cft.brand
 left join {{ ref('dim_produto') }} dp on dp.produto = cft.product
-left join {{ ref('dim_flowstep') }} df on df.desc_flowstep = cft.flowstep
+left join {{ ref('dim_agente_bot') }} df on df.desc_agente_bot = cft.desc_agente_bot
 ORDER BY 6
 )
 select * from cte_main

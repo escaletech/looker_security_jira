@@ -1,6 +1,6 @@
 SELECT
     message_session_id,
-    desc_flowstep,
+    desc_agente_bot,
     welcome,
     deseja_prosseguir,
     simulacao,
@@ -13,7 +13,7 @@ UNION ALL
 
 SELECT
     message_session_id,
-    desc_flowstep,
+    desc_agente_bot,
     conversas AS welcome,
     identificacao AS deseja_prosseguir,
     simulacao,
@@ -26,7 +26,7 @@ UNION ALL
 
 SELECT
     message_session_id,
-    desc_flowstep,
+    desc_agente_bot,
     conversas AS welcome,
     identificacao AS deseja_prosseguir,
     simulacao,
@@ -39,7 +39,7 @@ UNION ALL
 
 SELECT
     message_session_id,
-    desc_flowstep,
+    desc_agente_bot,
     conversas AS welcome,
     interacao AS deseja_prosseguir,
     NULL AS simulacao,
@@ -52,7 +52,7 @@ UNION ALL
 
 SELECT
     message_session_id,
-    desc_flowstep,
+    desc_agente_bot,
     welcome,
     identificacao_cpf AS deseja_prosseguir,
     simulacao_elegibilidade AS simulacao,
@@ -65,7 +65,7 @@ UNION ALL
 
 SELECT
     message_session_id,
-    desc_flowstep,
+    desc_agente_bot,
     conversas AS welcome,
     identificacao AS deseja_prosseguir,
     simulacao,

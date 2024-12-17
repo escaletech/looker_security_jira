@@ -1,4 +1,4 @@
-select -1 flowstep_id, 'NAO INFORMADO' desc_flowstep
+select -1 agente_bot_id, 'NAO INFORMADO' desc_agente_bot
 UNION ALL
 select 1 ,'ITAU CONSORCIO' 
 union all

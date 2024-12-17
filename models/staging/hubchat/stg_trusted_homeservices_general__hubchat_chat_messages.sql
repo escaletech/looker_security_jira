@@ -66,6 +66,7 @@ select
     ,min(timestamp) over(partition by session_init, user_id is not null order by timestamp) as tsp_first_agent_msg
     ,max(timestamp) over(partition by session_init, desc_message_source = 'hubchat', user_id is null order by timestamp) as tsp_last_bot_msg
     ,max(timestamp) over(partition by session_init order by timestamp desc) as tsp_last_msg
+    ,ROW_NUMBER() OVER (PARTITION BY session_init ORDER BY timestamp ASC) AS order_msg
     ,case when response_type = 'cron' then 1 else 0 end flag_timeout
     ,CASE 
         WHEN CHARINDEX('**', group_text) > 0 AND CHARINDEX('**', group_text, CHARINDEX('**', group_text) + 2) > CHARINDEX('**', group_text)

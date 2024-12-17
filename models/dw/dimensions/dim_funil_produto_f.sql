@@ -2,10 +2,10 @@
 with cte_context as (
     SELECT
         c.*       
-        ,f.desc_flowstep  
+        ,f.desc_agente_bot  
     FROM {{ ref('stg_trusted_finance_general__hubchat_escale_finance_messages_context') }} c
     left join {{ ref('int_join_hubchat_workspace') }} w on w.token = c.token
-    left join {{ ref('dim_flowstep') }} f on f.flowstep_id = w.flowstep_id
+    left join {{ ref('dim_agente_bot') }} f on f.agente_bot_id = w.agente_bot_id
     where true
         and welcome = 'true'
         and desc_flowstep = 'FINANCE - BV - FINANCIAMENTO'
@@ -13,7 +13,7 @@ with cte_context as (
 , cte_calculated as (
 SELECT    
     c.message_session_id
-    ,c.desc_flowstep
+    ,c.desc_agente_bot
     ,c.timestamp
     ,c.token
     ,1 as conversas
