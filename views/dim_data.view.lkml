@@ -1,6 +1,6 @@
 view: dim_data {
   sql_table_name: default_dw.dim_data ;;
-  suggestions: no
+  suggestions: yes
 
   dimension: abrev_do_mes {
     type: string
